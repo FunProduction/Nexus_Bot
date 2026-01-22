@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hartstocht & Connectie</title>
+    <!-- Fonts importeren -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 
+         * THEMA: Dark Elegant (De Zielen stijl)
+         */
+        
+        :root {
+            --bg-color: #020202;
+            --bg-glow: #2a0404;
+            --card-bg: #0a0a0a;
+            --primary-red: #c61a1a;
+            --primary-red-hover: #a31515;
+            --input-bg: #121212;
+            --border-dark: #1f1f1f;
+            --text-main: #e0e0e0;
+            --text-muted: #666666;
+            --accent-gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at 50% 0%, var(--bg-glow) 0%, var(--bg-color) 70%);
+            overflow: auto; /* Changed from hidden to auto to allow scrolling on small screens if needed */
+        }
+
+        /* Achtergrond animatie */
+        .hearts-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.2;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            color: #800000;
+            font-size: 2rem;
+            animation: floatUp 15s linear infinite;
+            text-shadow: 0 0 5px #000;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        .app-container {
+            width: 100%;
+            /* Default Mobile Width */
+            max-width: 420px; 
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            transition: max-width 0.5s ease;
+        }
+
+        /* De Hoofdkaart */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 40px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            position: relative;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: min-height 0.5s ease, padding 0.5s ease;
+        }
+
+        /* Herstart knopje linksboven */
+        .top-action {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .btn-restart {
+            background: transparent;
+            border: 1px solid #4a1010;
+            color: #b71c1c;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+            box-shadow: 0 0 10px rgba(198, 26, 26, 0.2);
+            background: rgba(40, 0, 0, 0.5);
+            transform: none;
+        }
+
+        /* Typografie */
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--primary-red);
+            font-size: 4rem;
+            margin: 30px 0 10px 0;
+            font-weight: 400;
+            line-height: 1.1;
+            text-shadow: 0 0 20px rgba(198, 26, 26, 0.5);
+            transition: font-size 0.5s ease;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 0.95rem;
+        }
+
+        /* Formulieren & Inputs */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+
+        .input-wrapper {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: #444;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-top: 1px solid #1a1a1a;
+            color: #888;
+            padding: 8px;
+            text-align: center;
+            text-align-last: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+        }
+        
+        select:hover {
+            color: #aaa;
+        }
+
+        /* Knoppen Layout */
+        #btns-task {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Gap van 10px tussen Volbracht en Geweigerd */
+            width: 100%;
+        }
+
+        button.pulse-btn {
+            background-color: var(--primary-red);
+            background: linear-gradient(180deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            border: none;
+            padding: 20px 0;
+            font-size: 0.95rem;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 10px 30px rgba(183, 28, 28, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button.pulse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(183, 28, 28, 0.5);
+            background: linear-gradient(180deg, #e53935 0%, #c62828 100%);
+        }
+
+        button.pulse-btn:disabled {
+            background: #222;
+            color: #444;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0; /* Gap wordt geregeld door flex container */
+            transition: all 0.2s;
+        }
+
+        button.secondary:hover {
+            border-color: #555;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Game Interface */
+        .bot-name {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .chat-text {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .chat-text p {
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 10px 0;
+            line-height: 1.5;
+            transition: font-size 0.5s ease;
+        }
+        
+        .intro-text {
+            font-size: 0.9rem !important;
+            color: #888 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px !important;
+        }
+
+        .highlight-name {
+            color: var(--primary-red);
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem; 
+            margin: 0 5px;
+            vertical-align: middle;
+            font-weight: normal;
+            text-transform: none !important; 
+            transition: font-size 0.5s ease;
+        }
+
+        .variable-val {
+            font-weight: 700;
+            color: var(--primary-red);
+            font-size: 1.5rem;
+        }
+
+        /* Info Button & Modal */
+        .info-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #888;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: serif;
+            cursor: pointer;
+            margin-left: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            transition: all 0.2s;
+        }
+
+        .info-btn:hover {
+            color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #111;
+            border: 1px solid var(--primary-red);
+            margin: auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(198, 26, 26, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #fff;
+        }
+
+        .modal-title {
+            color: var(--primary-red);
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            color: var(--accent-gold);
+            text-decoration: none;
+            border: 1px solid var(--accent-gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .modal-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .flex-visible { display: flex !important; }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        /* =========================================
+           DESKTOP / WIDE SCREEN MEDIA QUERY
+           ========================================= */
+        @media (min-width: 1024px) {
+            .app-container {
+                max-width: 1200px; /* Use full width on desktop */
+            }
+
+            .card {
+                min-height: 85vh; /* Use most of the height */
+                padding: 60px; /* More breathing room */
+                justify-content: center;
+            }
+
+            /* Larger typography for big screens */
+            h1 { font-size: 6rem; }
+            h2 { font-size: 1.2rem; margin-bottom: 50px; }
+            .chat-text p { font-size: 2.2rem; }
+            .intro-text { font-size: 1.4rem !important; margin-bottom: 20px !important; }
+            .highlight-name { font-size: 4rem; }
+            .variable-val { font-size: 2.5rem; }
+
+            /* Side-by-side Players Input */
+            .players-container {
+                flex-direction: row !important;
+                gap: 40px;
+                align-items: center;
+            }
+            .input-wrapper {
+                width: 100%;
+                margin-top: 0 !important;
+                padding: 10px;
+            }
+            input[type="text"] { font-size: 1.2rem; }
+            select { font-size: 1rem; }
+
+            /* Side-by-side Buttons */
+            #btns-task {
+                flex-direction: row;
+                gap: 30px;
+            }
+            
+            /* Penalty cards side-by-side */
+            .penalty-container {
+                display: flex;
+                flex-direction: row;
+                gap: 30px;
+                justify-content: center;
+            }
+            .penalty-card {
+                flex: 1;
+                border: 1px solid var(--border-dark);
+                padding: 20px;
+                border-radius: 20px;
+                background: rgba(255,255,255,0.02);
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+
+    <!-- Achtergrond Animatie -->
+    <div class="hearts-bg" id="hearts-container"></div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-title">Inspiratie</div>
+            <div id="modal-text" class="modal-body"></div>
+            <a id="modal-link" href="#" target="_blank" class="modal-link hidden">Meer Info</a>
+        </div>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- SCHERM 1: START -->
+        <div id="start-screen" class="card fade-in">
+            <div class="top-action">
+                <button class="btn-restart" onclick="restartGame()">
+                    ↻ Herstart
+                </button>
+            </div>
+
+            <div style="flex-grow:0;">
+                <h1>Nexus bot</h1>
+                <h2>De kinky AI uitdaging</h2>
+            </div>
+            
+            <div class="players-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                <div class="input-wrapper">
+                    <label class="sr-only">Naam Speler 1</label>
+                    <input type="text" id="p1-name" placeholder="Naam...">
+                    <select id="p1-gender">
+                        <option value="Heer">Heer</option>
+                        <option value="Dame">Dame</option>
+                        <option value="Ander">Ander</option>
+                    </select>
+                </div>
+
+                <div class="input-wrapper" style="margin-top: 10px;">
+                    <label class="sr-only">Naam Speler 2</label>
+                    <input type="text" id="p2-name" placeholder="Naam...">
+                    <select id="p2-gender">
+                        <option value="Dame" selected>Dame</option>
+                        <option value="Heer">Heer</option>
+                        <option value="Ander">Ander</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="pulse-btn">Begin de uitdaging</button>
+        </div>
+
+        <!-- SCHERM 2: SPEL -->
+        <div id="game-screen" class="card hidden">
+            
+            <div class="top-action">
+                <button class="btn-restart" onclick="restartGame()">
+                    ↻ Herstart
+                </button>
+            </div>
+
+            <div class="bot-name">Deze opdracht is AI gegenereerd</div>
+            
+            <div id="chat-area" class="chat-text fade-in">
+                <!-- Content -->
+            </div>
+
+            <div id="action-area" style="width: 100%;">
+                <!-- Opdracht knoppen -->
+                <div id="btns-task">
+                    <button onclick="handleTaskCompleted(true)" class="pulse-btn">Volbracht</button>
+                    <button onclick="handleTaskCompleted(false)" class="secondary">Geweigerd</button>
+                </div>
+
+                <!-- Tegenprestatie -->
+                <div id="btns-penalty" class="hidden">
+                    <div class="penalty-container">
+                        <div class="penalty-card">
+                            <p id="pen-text-1">...</p>
+                            <button onclick="handlePenaltyChosen(1)" class="secondary" style="margin-bottom:0; border-color: var(--primary-red); color: var(--primary-red);">Kies dit offer</button>
+                        </div>
+                        <div class="penalty-card">
+                            <p id="pen-text-2">...</p>
+                            <button onclick="handlePenaltyChosen(2)" class="secondary" style="margin-bottom:0; border-color: var(--primary-red); color: var(--primary-red);">Kies dit offer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beloningen -->
+                <div id="btns-reward" class="hidden">
+                    <div id="reward-list-container" class="reward-list"></div>
+                    <button id="btn-confirm-rewards" onclick="finishGame()" disabled class="pulse-btn">Verzegel het lot</button>
+                </div>
+
+                <!-- Verder -->
+                <div id="btns-next" class="hidden">
+                    <button onclick="nextStep()" class="pulse-btn">Vervolg de reis</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /*******************************************************
+         * INITIALISATIE & VISUALS
+         *******************************************************/
+        
+        const heartsContainer = document.getElementById('hearts-container');
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = Math.random() > 0.5 ? '♥' : '❤';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (12 + Math.random() * 15) + 's';
+            heart.style.animationDelay = Math.random() * 10 + 's';
+            heart.style.fontSize = (1 + Math.random() * 2) + 'rem';
+            heart.style.opacity = 0.1 + Math.random() * 0.2;
+            heartsContainer.appendChild(heart);
+        }
+
+        /*******************************************************
+         * DATA (GESPLITST & MET INFO)
+         *******************************************************/
+        
+        // FASE 1: Random Opwarmers (Gesplitst)
+        const fase1Pool = {
+            Heer: [
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 1, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                }
+            ],
+            Dame: [
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 1, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 2, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 3, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 4, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 5, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 6, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 7, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 8, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 9, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f1opdracht X", type: "tijd", count: 10, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                }
+            ],
+            Ander: [
+                { tekst: "Verstrengel jullie vingers en deel je warmste herinnering.", type: "geen", info: "Samen herinneringen ophalen versterkt jullie gedeelde geschiedenis." },
+                { tekst: "Fluister een geheim verlangen in het oor.", type: "geen", info: "Intimiteit groeit door het delen van geheimen." },
+                { tekst: "Geef X tedere kusjes op het gezicht.", type: "aantal", min: 3, max: 7, info: "Kleine aanrakingen bouwen spanning op." },
+                { tekst: "Houd elkaar vast in stilte voor X seconden.", type: "tijd", count: 25, info: "Soms is stilte de krachtigste taal." }
+            ]
+        };
+
+        // FASE 2: Vaste Volgorde (Verdieping & Gesplitst)
+        const fase2Lijst = {
+            Heer: [
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 1, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 2, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 3, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 4, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "vanaf nu leest u partner alle opdrachten en zegt enkel wat echt nodig is om de opdracht uit te voeren", type: "tijd", count: 5, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                }
+            ],
+            Dame: [
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 1, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 2, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 3, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "Bind u partner vast benen in ''Frogtie'' en armen in ''Reverse prayer'' . zorg ervoor u de mogenlijkheid hebt u partner om te draaien indien nodig", type: "tijd", count: 4, unit: "minuut",
+                    info: "Bind armen samen en benen samen. Hang deze aan bed en vervolgens aan het bed. ", link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmF6WBcB-80-3mLKyPObdwYvrmAV3RDHTm-A&s",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                },
+                { 
+                    tekst: "f2opdracht X", type: "tijd", count: 5, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" 
+                }
+            ],
+            Ander: [
+                { tekst: "Masseer de handen met aandacht voor X minuut.", type: "tijd", count: 1, unit: "minuut", info: "Aanraking heelt en verbindt." },
+                { tekst: "Vertel wanneer je je het meest verbonden voelde.", type: "geen", info: "Kwetsbaarheid is kracht." },
+                { tekst: "Ga achter de ander staan en omhels voor X seconden.", type: "tijd", min: 20, max: 40, info: "Bescherming en warmte bieden." },
+                { tekst: "Verzegel dit met een kus van X seconden.", type: "tijd", count: 10, info: "Focus volledig op de lippen." },
+                { tekst: "Deel een droom die je nog samen wilt vervullen.", type: "geen", info: "Toekomstdromen verbinden." }
+            ]
+        };
+
+        const fase3DameLijst = [
+            
+            
+            { tekst: "Blinkddoek u partner tot het spel zegt dat de blinddoek uit mag", 
+            type: "geen", 
+            info: "Wanneer het zicht wordt weggenomen, valt de visuele controle weg, wat een overweldigend gevoel van kwetsbaarheid en overgave creëert. Dit dwingt de man om volledig te vertrouwen op zijn andere zintuigen  tast, gehoor, en anticipatie. Elke aanraking, elke zachte fluistering of het geluid van naderende beweging wordt exponentieel versterkt." ,
+            Tegenprestatie1: "Ga op het gezicht zitten van u partner met u voeten op de balzak van u partner gedurende 15 minuten", Tegenprestatie2: "Blinkddoek u partner tot het spel zegt dat de blinddoek uit mag" },
+
+
+            { tekst: "Ga naar de wc en plas in een potje. Laat u partner hiervan proeven en gokken wat dit is", 
+            type: "geen", 
+            info: "Urine drinken geeft een leuk onderdanig gevoel en is zelfs gezond.",link: "https://www.nieuwsblad.be/binnenland/urine-drinken-is-goed-voor-de-gezondheid/54154578.html" ,
+            Tegenprestatie1: "mengel melk en augurkensap en laat u partner dit proevenen gokken wat dit is", Tegenprestatie2: "Laat u partner koffiedik proeven en gokken wat dit is" },
+            
+            { tekst: "Neem een gebruikte onderbroek steek deze in de mond van u partner met de vaginale afscheiding op de tong van u partner plak vast met verpakkingstape voor X beurten", 
+            type: "tijd", 
+            min: 3, 
+            max: 15, 
+            count:5,
+            info: "Zorg voor een goed gedragen onderbroek waar veel witverlies op ",link: "https://images.community.24baby.nl/image-topics/f90b2cc3-862f-41ca-b4c2-1f9eea993de8/small.jpg?v=63769018994" ,
+            Tegenprestatie1: "Neem een gebruikte kous steek deze in de mond van u partner plak vast met verpakkingstape voor X beurten", Tegenprestatie2: "Slaag 50 keer met je blote hand in de BALZAK van u partner." },
+
+            { tekst: "f3opdracht.", 
+            type: "tijd", 
+            min: 3, 
+            max: 5, 
+            count:4,
+            info: "info.",link: "https://www.youtube.com/results?search_query=link" ,
+            Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" },
+            
+            { tekst: "Bevestig de koude omhelzing van de klemmen aan de tepels van uw geliefde. Plaats het kristallijne ijsblok in hun mond, een stille belofte van smeltende controle. De uitdaging: De klemmen blijven zitten totdat het laatste, bevroren moment van het ijs is verdwenen. Hun geduld, uw vastberadenheid. Durf de spanning te dragen.", 
+            type: "geen", 
+            info: "De combinatie tussen scherp en koud kunnen extreem opwindend zijn voor een man",
+            Tegenprestatie1: "tegen1", Tegenprestatie2: "Tegen 2" }
+        ];
+
+        const fase4FinaleLijst = [
+            
+            { tekst: "Zeg u partner 'Slaapwel Schatje. als je flink slaapt maak ik je morgen ochtend eerste werk wakker. anders ...' indien u partner te aan het proberen bewegen is slaag hem in de balzak en zeg lig stil (indien jij dit meer als 3 keer moet herhalen schop hem van bed) ", 
+            type: "geen",
+            info: "Indien je hem moet zeggen lig stil dan slaapt hij niet flink",
+            Tegenprestatie1: "Ik voer toch de opdracht uit", Tegenprestatie2: "Smijt u partner op de grond en laat u partner op de grond slapen" }
+            
+            ];
+
+        const defaultTegenprestaties = [
+            "Fluister 'Je bent mijn alles'.",
+            "Doe een verleidingsdansje.",
+            "Kus het voorhoofd.",
+            "Maak morgen het ontbijt."
+        ];
+
+        const beloningenLijst = [
+            "Ontbijt op bed in het weekend.",
+            "Een avond zonder telefoons.",
+            "Een massage van 30 minuten.",
+            "Samen een romantische film kijken.",
+            "Een nachtelijke wandeling.",
+            "Favoriete gerecht koken."
+        ];
+
+        /*******************************************************
+         * LOGICA
+         *******************************************************/
+
+        let players = [];
+        let gameState = { phase: 0, turnInPhase: 0, currentTask: null, activePlayerIdx: 0 };
+
+        // DOM Elementen
+        const elStartScreen = document.getElementById('start-screen');
+        const elGameScreen = document.getElementById('game-screen');
+        const elChatArea = document.getElementById('chat-area');
+        const elBtnsTask = document.getElementById('btns-task');
+        const elBtnsPenalty = document.getElementById('btns-penalty');
+        const elBtnsReward = document.getElementById('btns-reward');
+        const elBtnsNext = document.getElementById('btns-next');
+        const modal = document.getElementById('info-modal');
+
+        // Helpers
+        function formatName(name) {
+            if (!name) return "";
+            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+        }
+
+        function restartGame() {
+            // UI Switch
+            elGameScreen.classList.add('hidden');
+            elStartScreen.classList.remove('hidden');
+            
+            // Trigger animatie opnieuw voor fris effect
+            elStartScreen.classList.remove('fade-in');
+            void elStartScreen.offsetWidth; // trigger reflow
+            elStartScreen.classList.add('fade-in');
+
+            // Reset interne state
+            gameState = { phase: 0, turnInPhase: 0, currentTask: null, activePlayerIdx: 0 };
+            
+            // UI elements schoonmaken
+            elChatArea.innerHTML = '';
+            document.getElementById('reward-list-container').innerHTML = '';
+            resetActionButtons();
+        }
+
+        function startGame() {
+            let p1Name = document.getElementById('p1-name').value.trim() || "Geliefde 1";
+            let p2Name = document.getElementById('p2-name').value.trim() || "Geliefde 2";
+            
+            // Format namen
+            p1Name = formatName(p1Name);
+            p2Name = formatName(p2Name);
+
+            const p1Gender = document.getElementById('p1-gender').value;
+            const p2Gender = document.getElementById('p2-gender').value;
+
+            players = [ { name: p1Name, gender: p1Gender }, { name: p2Name, gender: p2Gender } ];
+
+            elStartScreen.classList.add('hidden');
+            elGameScreen.classList.remove('hidden');
+            startPhase(1);
+        }
+
+        function startPhase(phaseNum) {
+            gameState.phase = phaseNum;
+            gameState.turnInPhase = 0;
+            if (phaseNum === 5) initRewardPhase();
+            else nextTurn();
+        }
+
+        function nextTurn() {
+            resetActionButtons();
+
+            let maxTurns = 0;
+            if (gameState.phase === 1) maxTurns = 6; 
+            if (gameState.phase === 2) maxTurns = fase2Lijst.length; 
+            if (gameState.phase === 3) maxTurns = fase3DameLijst.length; 
+            if (gameState.phase === 4) maxTurns = fase4FinaleLijst.length;
+
+            if (gameState.turnInPhase >= maxTurns) {
+                startPhase(gameState.phase + 1);
+                return;
+            }
+
+            let pIdx = 0;
+            if (gameState.phase <= 2) {
+                pIdx = gameState.turnInPhase % 2; 
+            } else {
+                pIdx = getTargetPlayerForDameRound(gameState.turnInPhase);
+            }
+
+            gameState.activePlayerIdx = pIdx;
+            const player = players[pIdx];
+
+            let task = null;
+            
+            // Selecteer de juiste pool op basis van geslacht voor Fase 1 & 2
+            if (gameState.phase === 1) {
+                const pool = fase1Pool[player.gender] || fase1Pool['Ander'];
+                task = pool[Math.floor(Math.random() * pool.length)];
+            } 
+            else if (gameState.phase === 2) {
+                const list = fase2Lijst[player.gender] || fase2Lijst['Ander'];
+                // Zorg dat we niet out of bounds gaan (modulo of fallback)
+                let taskIdx = Math.floor(gameState.turnInPhase / 2);
+                if (taskIdx >= list.length) taskIdx = 0;
+                task = list[taskIdx];
+            }
+            else if (gameState.phase === 3) task = fase3DameLijst[gameState.turnInPhase];
+            else if (gameState.phase === 4) task = fase4FinaleLijst[gameState.turnInPhase];
+
+            gameState.currentTask = task;
+
+            // Introductie
+            elChatArea.innerHTML = `<p class="intro-text">Nexus Genereert u uitdaging...</p>`;
+            
+            setTimeout(() => {
+                const intros = [
+                    `Voor <span class="highlight-name">${player.name}</span>`,
+                    `Aan <span class="highlight-name">${player.name}</span>`,
+                    `De beurt is aan <span class="highlight-name">${player.name}</span>`
+                ];
+                const intro = intros[Math.floor(Math.random() * intros.length)];
+                
+                let displayTekst = task.tekst;
+                let finalValue = 0;
+
+                if (task.type !== 'geen') {
+                    finalValue = task.count !== undefined ? task.count : Math.floor(Math.random() * (task.max - task.min + 1)) + task.min;
+                    if (displayTekst.includes('X')) {
+                        displayTekst = displayTekst.replace('X', `<span id="slot-machine" class="variable-val">...</span>`);
+                    } else {
+                        displayTekst += ` <br><span id="slot-machine" class="variable-val">...</span>`;
+                    }
+                }
+
+                // Render opdracht met info knop
+                let infoBtnHTML = '';
+                if (task.info) {
+                    // We escapen info text voor veiligheid in onclick
+                    const safeInfo = task.info.replace(/'/g, "&apos;");
+                    const safeLink = task.link ? task.link : "";
+                    infoBtnHTML = `<button class="info-btn" onclick="openModal('${safeInfo}', '${safeLink}')">i</button>`;
+                }
+
+                elChatArea.innerHTML = `
+                    <p class="intro-text">${intro}</p>
+                    <p style="font-size: 1.3rem; margin-top: 20px;">
+                        ${displayTekst}
+                        ${infoBtnHTML}
+                    </p>
+                `;
+                elBtnsTask.classList.remove('hidden');
+                // Fix voor Flexbox gap visibility bug in sommige gevallen
+                elBtnsTask.classList.add('flex-visible');
+
+                if (task.type !== 'geen') runSlotMachine(finalValue);
+
+            }, 800);
+        }
+
+        function getTargetPlayerForDameRound(turnIndex) {
+            const p1 = players[0];
+            const p2 = players[1];
+            const isDame = p => p.gender === 'Dame';
+            const isAnder = p => p.gender === 'Ander';
+
+            if (isDame(p1) && isDame(p2)) return turnIndex % 2;
+            if (isDame(p1)) return 0;
+            if (isDame(p2)) return 1;
+            if (isAnder(p1) && isAnder(p2)) return turnIndex % 2;
+            if (isAnder(p1)) return 0;
+            if (isAnder(p2)) return 1;
+            return 1; 
+        }
+
+        function handleTaskCompleted(success) {
+            if (success) {
+                const praise = ["Prachtig", "Passievol", "Verbonden", "Schitterend"];
+                elChatArea.innerHTML = `<p class="fade-in highlight-name" style="font-size:3rem;">${praise[Math.floor(Math.random()*praise.length)]}</p>`;
+                finishTurn();
+            } else {
+                elBtnsTask.classList.add('hidden');
+                elBtnsTask.classList.remove('flex-visible');
+                const task = gameState.currentTask;
+                const pen1 = task.Tegenprestatie1 || getRandomDefaultPenalty();
+                const pen2 = task.Tegenprestatie2 || getRandomDefaultPenalty();
+
+                document.getElementById('pen-text-1').innerText = pen1;
+                document.getElementById('pen-text-2').innerText = pen2;
+
+                elChatArea.innerHTML = `<p style="color:var(--primary-red)">Een offer wordt gevraagd van <span class="highlight-name" style="font-size:1.8rem">${players[gameState.activePlayerIdx].name}</span></p>`;
+                elBtnsPenalty.classList.remove('hidden');
+            }
+        }
+
+        function handlePenaltyChosen(choiceNum) {
+            elChatArea.innerHTML = `<p class="fade-in">Het offer is geaccepteerd.</p>`;
+            elBtnsPenalty.classList.add('hidden');
+            elBtnsNext.classList.remove('hidden');
+        }
+
+        function finishTurn() {
+            elBtnsTask.classList.add('hidden');
+            elBtnsTask.classList.remove('flex-visible');
+            setTimeout(() => {
+                gameState.turnInPhase++;
+                nextTurn();
+            }, 1800);
+        }
+
+        function nextStep() {
+            elBtnsNext.classList.add('hidden');
+            gameState.turnInPhase++;
+            nextTurn();
+        }
+
+        function initRewardPhase() {
+            resetActionButtons();
+            elChatArea.innerHTML = `
+                <h3 style="font-family:'Great Vibes'; font-size:3rem; margin-bottom:10px;">Voltooid</h3>
+                <p>Jullie reis is ten einde gekomen.</p>
+                <p>Kies jullie beloningen.</p>
+            `;
+            const container = document.getElementById('reward-list-container');
+            container.innerHTML = "";
+            beloningenLijst.forEach((reward, index) => {
+                const div = document.createElement('div');
+                div.className = 'reward-item';
+                div.innerHTML = `<input type="checkbox" id="reward-${index}" value="${reward}" onchange="checkRewards()"><label for="reward-${index}">${reward}</label>`;
+                container.appendChild(div);
+            });
+            elBtnsReward.classList.remove('hidden');
+        }
+
+        function checkRewards() {
+            const checkboxes = document.querySelectorAll('#reward-list-container input[type="checkbox"]');
+            let checked = false;
+            checkboxes.forEach(cb => { if(cb.checked) checked = true; });
+            document.getElementById('btn-confirm-rewards').disabled = !checked;
+        }
+
+        function finishGame() {
+            const checkboxes = document.querySelectorAll('#reward-list-container input[type="checkbox"]');
+            let selected = [];
+            checkboxes.forEach(cb => { if(cb.checked) selected.push(cb.value); });
+
+            resetActionButtons();
+            let listHTML = `<ul style="text-align:left; display:inline-block; font-style:italic; color:#ccc;">`;
+            selected.forEach(s => listHTML += `<li>${s}</li>`);
+            listHTML += `</ul>`;
+
+            elChatArea.innerHTML = `
+                <h3 style="font-family:'Great Vibes'; font-size:3rem;">Geniet</h3>
+                <p>Jullie keuze:</p>
+                ${listHTML}
+                <p style="margin-top:30px; color:var(--primary-red);">♥</p>
+            `;
+        }
+
+        function getRandomDefaultPenalty() {
+            return defaultTegenprestaties[Math.floor(Math.random() * defaultTegenprestaties.length)];
+        }
+
+        function resetActionButtons() {
+            elBtnsTask.classList.add('hidden');
+            elBtnsTask.classList.remove('flex-visible');
+            elBtnsPenalty.classList.add('hidden');
+            elBtnsReward.classList.add('hidden');
+            elBtnsNext.classList.add('hidden');
+        }
+
+        function runSlotMachine(targetValue) {
+            const el = document.getElementById('slot-machine');
+            if (!el) return;
+            let steps = 15;
+            let intervalTime = 80;
+            let currentStep = 0;
+            const interval = setInterval(() => {
+                let tempVal = Math.floor(Math.random() * 50) + 1;
+                el.innerText = tempVal;
+                currentStep++;
+                if (currentStep >= steps) {
+                    clearInterval(interval);
+                    el.innerText = targetValue;
+                    el.style.transform = "scale(1.2)";
+                    setTimeout(() => el.style.transform = "scale(1)", 200);
+                }
+            }, intervalTime);
+        }
+
+        // Modal Functions
+        function openModal(text, link) {
+            document.getElementById('modal-text').innerText = text;
+            const linkEl = document.getElementById('modal-link');
+            if (link && link !== "") {
+                linkEl.href = link;
+                linkEl.classList.remove('hidden');
+            } else {
+                linkEl.classList.add('hidden');
+            }
+            // Zorg dat de modal overal bovenop ligt
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Sluit modal als je buiten klikt
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
