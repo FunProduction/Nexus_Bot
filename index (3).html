@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus bot - u kinky spel</title>
+    <!-- Fonts importeren -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 
+         * THEMA: Dark Elegant (De Zielen stijl)
+         */
+        
+        :root {
+            --bg-color: #020202;
+            --bg-glow: #2a0404;
+            --card-bg: #0a0a0a;
+            --primary-red: #c61a1a;
+            --primary-red-hover: #a31515;
+            --input-bg: #121212;
+            --border-dark: #1f1f1f;
+            --text-main: #e0e0e0;
+            --text-muted: #666666;
+            --accent-gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at 50% 0%, var(--bg-glow) 0%, var(--bg-color) 70%);
+            overflow: auto; /* Changed from hidden to auto to allow scrolling on small screens if needed */
+        }
+
+        /* Achtergrond animatie */
+        .hearts-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.2;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            color: #800000;
+            font-size: 2rem;
+            animation: floatUp 15s linear infinite;
+            text-shadow: 0 0 5px #000;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        .app-container {
+            width: 100%;
+            /* Default Mobile Width */
+            max-width: 420px; 
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            transition: max-width 0.5s ease;
+        }
+
+        /* De Hoofdkaart */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 40px;
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            position: relative;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: min-height 0.5s ease, padding 0.5s ease;
+        }
+
+        /* Herstart knopje linksboven */
+        .top-action {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .btn-restart {
+            background: transparent;
+            border: 1px solid #4a1010;
+            color: #b71c1c;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+            box-shadow: 0 0 10px rgba(198, 26, 26, 0.2);
+            background: rgba(40, 0, 0, 0.5);
+            transform: none;
+        }
+
+        /* Typografie */
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--primary-red);
+            font-size: 4rem;
+            margin: 30px 0 10px 0;
+            font-weight: 400;
+            line-height: 1.1;
+            text-shadow: 0 0 20px rgba(198, 26, 26, 0.5);
+            transition: font-size 0.5s ease;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 0.95rem;
+        }
+
+        /* Formulieren & Inputs */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            border: 0;
+        }
+
+        .input-wrapper {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 5px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: #444;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-top: 1px solid #1a1a1a;
+            color: #888;
+            padding: 8px;
+            text-align: center;
+            text-align-last: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+        }
+        
+        select:hover {
+            color: #aaa;
+        }
+
+        /* Knoppen Layout */
+        #btns-task {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Gap van 10px tussen Volbracht en Geweigerd */
+            width: 100%;
+        }
+
+        button.pulse-btn {
+            background-color: var(--primary-red);
+            background: linear-gradient(180deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            border: none;
+            padding: 20px 0;
+            font-size: 0.95rem;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 10px 30px rgba(183, 28, 28, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button.pulse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(183, 28, 28, 0.5);
+            background: linear-gradient(180deg, #e53935 0%, #c62828 100%);
+        }
+
+        button.pulse-btn:disabled {
+            background: #222;
+            color: #444;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0; /* Gap wordt geregeld door flex container */
+            transition: all 0.2s;
+        }
+
+        button.secondary:hover {
+            border-color: #555;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Game Interface */
+        .bot-name {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .chat-text {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .chat-text p {
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 10px 0;
+            line-height: 1.5;
+            transition: font-size 0.5s ease;
+        }
+        
+        .intro-text {
+            font-size: 0.9rem !important;
+            color: #888 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px !important;
+        }
+
+        .highlight-name {
+            color: var(--primary-red);
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem; 
+            margin: 0 5px;
+            vertical-align: middle;
+            font-weight: normal;
+            text-transform: none !important; 
+            transition: font-size 0.5s ease;
+        }
+
+        .variable-val {
+            font-weight: 700;
+            color: var(--primary-red);
+            font-size: 1.5rem;
+        }
+
+        /* Info Button & Modal */
+        .info-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #888;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: serif;
+            cursor: pointer;
+            margin-left: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            transition: all 0.2s;
+        }
+
+        .info-btn:hover {
+            color: var(--primary-red);
+            border-color: var(--primary-red);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #111;
+            border: 1px solid var(--primary-red);
+            margin: auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(198, 26, 26, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #fff;
+        }
+
+        .modal-title {
+            color: var(--primary-red);
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            color: var(--accent-gold);
+            text-decoration: none;
+            border: 1px solid var(--accent-gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .modal-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .flex-visible { display: flex !important; }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        /* =========================================
+           DESKTOP / WIDE SCREEN MEDIA QUERY
+           ========================================= */
+        @media (min-width: 1024px) {
+            .app-container {
+                max-width: 1200px; /* Use full width on desktop */
+            }
+
+            .card {
+                min-height: 85vh; /* Use most of the height */
+                padding: 60px; /* More breathing room */
+                justify-content: center;
+            }
+
+            /* Larger typography for big screens */
+            h1 { font-size: 6rem; }
+            h2 { font-size: 1.2rem; margin-bottom: 50px; }
+            .chat-text p { font-size: 2.2rem; }
+            .intro-text { font-size: 1.4rem !important; margin-bottom: 20px !important; }
+            .highlight-name { font-size: 4rem; }
+            .variable-val { font-size: 2.5rem; }
+
+            /* Side-by-side Players Input */
+            .players-container {
+                flex-direction: row !important;
+                gap: 40px;
+                align-items: center;
+            }
+            .input-wrapper {
+                width: 100%;
+                margin-top: 0 !important;
+                padding: 10px;
+            }
+            input[type="text"] { font-size: 1.2rem; }
+            select { font-size: 1rem; }
+
+            /* Side-by-side Buttons */
+            #btns-task {
+                flex-direction: row;
+                gap: 30px;
+            }
+            
+            /* Penalty cards side-by-side */
+            .penalty-container {
+                display: flex;
+                flex-direction: row;
+                gap: 30px;
+                justify-content: center;
+            }
+            .penalty-card {
+                flex: 1;
+                border: 1px solid var(--border-dark);
+                padding: 20px;
+                border-radius: 20px;
+                background: rgba(255,255,255,0.02);
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+
+    <!-- Achtergrond Animatie -->
+    <div class="hearts-bg" id="hearts-container"></div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-title">Info</div>
+            <div id="modal-text" class="modal-body"></div>
+            <a id="modal-link" href="#" target="_blank" class="modal-link hidden">Meer Info</a>
+        </div>
+    </div>
+
+    <div class="app-container">
+        
+        <!-- SCHERM 1: START -->
+        <div id="start-screen" class="card fade-in">
+            <div class="top-action">
+                <button class="btn-restart" onclick="restartGame()">
+                    ↻ Reset ↻
+                </button>
+            </div>
+
+            <div style="flex-grow:0;">
+                <h1>Nexus bot</h1>
+                <h2>De kinky AI uitdaging</h2>
+            </div>
+
+            <div class="woord-vooraf-card" style="background: rgba(198, 26, 26, 0.04); border: 1px dashed rgba(198, 26, 26, 0.3); border-radius: 16px; padding: 18px 24px; text-align: left; max-width: 650px; margin: 0 auto 25px auto; box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);">
+                <div style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--primary-red); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 1.1rem;">✦</span> Woord Vooraf &amp; Richtlijnen
+                </div>
+                <p style="font-size: 0.82rem; line-height: 1.6; margin: 0; color: #b5b5b5; font-weight: 400; font-family: 'Montserrat', sans-serif;">
+                    Welkom bij <strong>Nexus Bot</strong>. Dit spel is ontworpen om jullie intimiteit en kinky verlangens op een speelse, uitdagende manier te verkennen. 
+                    De opdrachten kunnen intens en grensverleggend zijn.  
+                    <strong>De uitdaging is het einde van het spel halen</strong> het de uitdaging blijft doorgaan klaargekomen uitdaging en straf zijn te moeilijk.
+                     Zorg ervoor dat volgende zaken zijn afgesproken voordoen. Welke pijnspeeltjes mogen niet. Mag je partner seks hebben met een ander persoon in u bijzijn. Mag wondes. Mag naalden. Mag blijvende schade. stopwoord 
+                </p>
+            </div>
+            
+            <div class="players-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                <div class="input-wrapper">
+                    <label class="sr-only">Naam Speler 1</label>
+                    <input type="text" id="p1-name" placeholder="Naam...">
+                    <select id="p1-gender">
+                        <option value="Heer">Heer</option>
+                        <option value="Dame">Dame</option>
+                        <option value="Ander">Ander</option>
+                    </select>
+                </div>
+
+                <div class="input-wrapper" style="margin-top: 10px;">
+                    <label class="sr-only">Naam Speler 2</label>
+                    <input type="text" id="p2-name" placeholder="Naam...">
+                    <select id="p2-gender">
+                        <option value="Dame" selected>Dame</option>
+                        <option value="Heer">Heer</option>
+                        <option value="Ander">Ander</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="pulse-btn">Begin jullie kinky uitdaging</button>
+        </div>
+
+        <!-- SCHERM 2: SPEL -->
+        <div id="game-screen" class="card hidden">
+            
+            <div class="top-action">
+                <button class="btn-restart" onclick="restartGame()">
+                    ↻ Herstart
+                </button>
+            </div>
+
+            <div class="bot-name">Deze opdracht is AI gegenereerd</div>
+            
+            <div id="chat-area" class="chat-text fade-in">
+                <!-- Content -->
+            </div>
+
+            <div id="action-area" style="width: 100%;">
+                <!-- Opdracht knoppen -->
+                <div id="btns-task">
+                    <button onclick="handleTaskCompleted(true)" class="pulse-btn">Volbracht</button>
+                    <button onclick="handleTaskCompleted(false)" class="secondary">Dit durf ik niet of opdracht gefaald</button>
+                </div>
+
+                <!-- Tegenprestatie -->
+                <div id="btns-penalty" class="hidden">
+                    <div class="penalty-container">
+                        <div class="penalty-card">
+                            <p id="pen-text-1">...</p>
+                            <button onclick="handlePenaltyChosen(1)" class="secondary" style="margin-bottom:0; border-color: var(--primary-red); color: var(--primary-red);">Kies deze Tegenprestatie</button>
+                        </div>
+                        <div class="penalty-card">
+                            <p id="pen-text-2">...</p>
+                            <button onclick="handlePenaltyChosen(2)" class="secondary" style="margin-bottom:0; border-color: var(--primary-red); color: var(--primary-red);">Kies deze Tegenprestatie</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beloningen -->
+                <div id="btns-reward" class="hidden">
+                    <div id="reward-list-container" class="reward-list"></div>
+                    <button id="btn-confirm-rewards" onclick="finishGame()" disabled class="pulse-btn">Verzegel het lot</button>
+                </div>
+
+                <!-- Verder -->
+                <div id="btns-next" class="hidden">
+                    <button onclick="nextStep()" class="pulse-btn">Ik bevestig dat ik de prijs betaald heb</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /*******************************************************
+         * INITIALISATIE & VISUALS
+         *******************************************************/
+        
+        const heartsContainer = document.getElementById('hearts-container');
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = Math.random() > 0.5 ? '♥' : '❤';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (12 + Math.random() * 15) + 's';
+            heart.style.animationDelay = Math.random() * 10 + 's';
+            heart.style.fontSize = (1 + Math.random() * 2) + 'rem';
+            heart.style.opacity = 0.1 + Math.random() * 0.2;
+            heartsContainer.appendChild(heart);
+        }
+
+        /*******************************************************
+         * DATA (GESPLITST & MET INFO)
+         *******************************************************/
+        
+        // FASE 1: Random Opwarmers (Gesplitst)
+        const fase1Pool = {
+            Heer: [
+                {
+                    tekst: "Kies samen een vaste dag per maand om samen op date te gaan.<br><br>Alle even maanden een erotische date. <br>Alle oneven maanden een gewone date.", type: "geen"
+                    ,info: "Door minimaal 1 keer per maand samen iets te doen brengt dit jullie beiden geluk",
+                    Tegenprestatie1: "Voer elk van de volgende opdrachten en tegenprestaties waar een getal op staat dubbel uit (Dit geldt enkel voor jouw opdrachten)", 
+                    Tegenprestatie2: "Al het huishouden voor de komende maand moet jij uitvoeren" 
+                },
+                { 
+                    tekst: "Voer uit binnen 7 dagen. Zoek een kinky spel, koop dit en speel het samen",  type: "geen",
+                    info: "Door minimaal 1 keer per maand samen iets te doen brengt dit jullie beiden geluk",
+                    Tegenprestatie1: "Voer elk van de volgende opdrachten en tegenprestaties waar een getal op staat dubbel uit (Dit geldt enkel voor jouw opdrachten)", 
+                    Tegenprestatie2: "Doe een butplug aan voor de rest van het spel" 
+                },
+                { 
+                    tekst: "Zoek een kanten V-Waist Lace slip, kies er samen één en koop 2 slips (jij trakteert)<br>Kies samen een vaste dag waarop jullie beiden deze onderbroek moeten dragen (de persoon die dit vergeet moet de partner masseren)", type: "geen", 
+                    info: "Laat jullie maandelijks dezelfde slip dragen. Het is jullie stille, intieme ritueel; een exclusieve, gedeelde esthetiek die jullie wederzijdse verbondenheid elke maand opnieuw bezegelt.", link: "https://euqs.shein.com/Charlaine-Women-s-Solid-Color-V-Waist-Lace-Sexy-Thong-Panties-p-214155430.html?src_identifier=st%3D2%60sc%3DUnderwear%20Women%20kanten%60sr%3D0%60ps%3D1&src_module=search&src_tab_page_id=page_search1771938520768&mallCode=1&pageListType=4",
+                    Tegenprestatie1: "Zit geknield naast het bed en geef uw partner een voetmassage.", 
+                    Tegenprestatie2: "Ontvang 10 schoppen in de balzak van uw partner." 
+                },
+                { 
+                    tekst: "u partner zoekt een bustier top, kies er samen één en koop 2 topjes (jij trakteert)<br>Kies samen een vaste dag waarop jullie beiden deze topje moeten dragen (de persoon die dit vergeet moet de partner masseren)", type: "geen", 
+                    info: "Laat jullie maandelijks dezelfde topje dragen. Het is jullie stille, intieme ritueel; een exclusieve, gedeelde esthetiek die jullie wederzijdse verbondenheid elke maand opnieuw bezegelt.", link: "https://euqs.shein.com/Chiquease-Lace-Bustier-Crop-Cami-Top-p-2986559.html?goods_id=11162218&test=5051&url_from=adhub551104948&scene=1&pf=google&ad_type=DPA&language=en&siteuid=euqs&version_bid=102311026%2C102310816%2C102353676%2C102310681%2C102310801&version_eid=100902896&landing_page_id=1510&ad_test_id=49075&requestId=olw-5nw5lgbxs0tj&cid=22787839159&gad_source=1&network=g&gad_campaignid=22787839159&adid=767026792236&tv_b=2&currency=EUR&lang=euqsen&skucode=I11tpatynwww&product_set_id=2831&onelink=0%2Fgooglefeed_euqs&gclid=CjwKCAjwtcHPBhADEiwAWo3sJrBDlEnZ4vLL5YOzO6swb8Usk0WTNXJQw0a3wNRAXZSLp5BD9hfOEhoC4OAQAvD_BwE&ismg=25a9f519dcba9a832a5deb453662ff7efb591ede3fee0f1b33599554ce2fd69f_01_1777367929&geoid=9196917&gbraid=0AAAAADm0yO6aUBqcssjMcschtlSzbHngx&setid=181104784257&kwd=pla-2406565975148&main_attr=27_364",
+                    Tegenprestatie1: "Zit geknield naast het bed en geef uw partner een voetmassage.", 
+                    Tegenprestatie2: "Ontvang 10 schoppen in de balzak van uw partner." 
+                },
+                { 
+                    tekst: "Zoek een slaapkleedje, kies samen één en koop hier 2 stuks van (jij trakteert)<br>Kies samen een vaste dag waarop jullie beiden dit kleedje moeten dragen vanaf het moment dat jullie alleen zijn tot jullie wakker worden <br>(ook als je deze nacht niet thuis slaapt)", type: "geen", 
+                    info: "Laat jullie maandelijks dezelfde slip dragen. Het is jullie stille, intieme ritueel; een exclusieve, gedeelde esthetiek die jullie wederzijdse verbondenheid elke maand opnieuw bezegelt.", link: "https://euqs.shein.com/Slumberist-2pcs-Set-Fishbone-Style-Cinch-Waist-Lace-Cami-Nightgown-Wide-Sleeve-Mesh-Robe-p-43555481.html?src_identifier=st%3D6%60sc%3DNacht%20Kleding%60sr%3D0%60ps%3D1&src_module=search&src_tab_page_id=page_goods_detail1777375218512&mallCode=1&pageListType=4",
+                    Tegenprestatie1: "Zit geknield naast het bed en geef uw partner een voetmassage.", 
+                    Tegenprestatie2: "Ontvang 10 schoppen in de balzak van uw partner." 
+                },
+                { 
+                    tekst: "Neem wasknijpers. Doe elk om de beurt een wasknijper op het lichaam van de partner. De persoon die als eerste vraagt te stoppen moet de wasknijpers X minuten aanhouden", type: "tijd", count: 2, unit: "minuut",
+                    info: "De tijd start pas als de winnaar geen wasknijpers meer aan heeft.<br>De winnaar mag de wasknijpers van zichzelf en de verliezer losmakken op de manier dat die wenst.<br>", link: "https://xhamster.com/videos/slave-slut-with-clothespins-1455414",
+                    Tegenprestatie1: "Laat uw partner in en aan uw tepel bijten gedurende 1 minuut", 
+                    Tegenprestatie2: "Zit geknield naast het bed en geef uw partner een voetmassage" 
+                },
+                { 
+                    tekst: "Masseer gedurende X seconden de nek of schouders van uw partner, zonder te praten", type: "tijd", count: 25, unit: "minuut",
+                    info: "info", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+                    Tegenprestatie1: "Al het huishouden voor de komende maand moet jij uitvoeren", Tegenprestatie2: "Laat uw partner in en aan uw tepel bijten gedurende 1 minuut" 
+                },
+                { 
+                    tekst: "Gedurende X beurten mag jij geen geluid maken.<br>Per keer dat jij geluid maakt moet je 1 huishoudelijke taak extra uitvoeren komende week", type: "tijd", count: 3, unit: "minuut",
+                    info: "De man mag geen geluid maken.<br>Niet spreken.<br>Niet kreunen.<br>Geen geluid van pijn maken.",
+                    Tegenprestatie1: "Al het huishouden voor de komende maand moet jij uitvoeren", Tegenprestatie2: "Doe een buttplug in tot het spel anders opdraagt" 
+                },
+                { 
+                    tekst: "Uw partner houdt uw gezicht vast en dwingt je om non-stop X seconden lang hem/haar te kussen.", type: "tijd", count: 5, unit: "minuut",
+                    info: "", link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXo6ZzTOzOHibD-ei1l-94qkvP6moxrLGOjg&s",
+                    Tegenprestatie1: "Laat uw partner in en aan uw oren likken gedurende 30 seconden", Tegenprestatie2: "Komende week mag je qua drank enkel water drinken" 
+                },
+                { 
+                    tekst: "Kniel voor u partner kus de hand gedurende X minuten",  type: "tijd", count: 2, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Handen vastgebonden achter je rug voor de rest van het spel", 
+                    Tegenprestatie2: "Laat uw partner in en aan uw oren likken gedurende 30 seconden" 
+                },
+                { 
+                    tekst: "Kniel voor u partner kus de hand gedurende X minuten",  type: "tijd", count: 2, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Handen vastgebonden achter je rug voor de rest van het spel", 
+                    Tegenprestatie2: "Laat uw partner in en aan uw oren likken gedurende 30 seconden" 
+                },
+                { 
+                    tekst: "Laat u partner X wasknijpers op jouw hangen terwijl jij oogcontact houd pas als alle wasknijpers zijn losgehaald mag je stopen met oogcontact houden (per keer jij oogcontact stopt mag u partner 5 extra wasknijpers hangen)",  type: "tijd", count: 43, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Voer opdracht dubbel uit: Laat u partner 86 wasknijpers op jouw hangen terwijl jij oogcontact houd pas als alle wasknijpers zijn losgehaald mag je stopen met oogcontact houden (per keer jij oogcontact stopt mag u partner 10 extra wasknijpers hangen)", 
+                    Tegenprestatie2: "Ontvang 50 zweepslagen op u poep" 
+                },
+                { 
+                    tekst: "Sta naakt met handen achter je hoofd met je handen gespreid ogen dicht je mag geen geluid maken of bewegen gedurende X minuten.<br> Je partner mag doen wat die wenst om je te laten falen.<br>",  type: "tijd", count: 2.5, unit: "minuut",
+                    info: "Hoop op genade dat is de enige weg tot sucses <br> bv: Tepels langzaal knijpen en draaien... <br><br> beweeg je of maak je geluid begind de tijd opnieuw",
+                    Tegenprestatie1: "Doe een buttplug in tot het spel anders opdraagt", 
+                    Tegenprestatie2: "Draag tepelklemmen gedurende 15 minuten speel het spel door " 
+                },
+                { 
+                    tekst: "Laat uw partner een knielende positie aannemen om de zolen van uw voeten te laten kussen.<br>Gedurende X minuten", type: "tijd", count: 2, unit: "minuut",
+                    info: "info", link: "https://pbs.twimg.com/media/GqXnX-6bMAAnyX2.jpg",
+                    Tegenprestatie1: "Ga op uw rug liggen.<br>Uw partner gaat op jou staan", Tegenprestatie2: "Laat uw partner u tepelklemmen aandoen gedurende 5 beurten" 
+                },
+                { 
+                    tekst: "Laat een streep warme honing over de buik van uw partner lopen — je moeten dit zonder handen opzuigen.", type: "geen",
+                    info: "Honing is goed voor de huid en het opzuigen geeft een gevoel dat heel fijn kan zijn", link: "https://www.shutterstock.com/shutterstock/videos/22447435/preview/stock-footage-beautiful-girl-massagging-herself-with-honey-and-body-lotion.mp4",
+                    Tegenprestatie1: "Laat uw partner in en aan uw tepel bijten gedurende 1 minuut", Tegenprestatie2: "Ontvang 50 zweepslagen op u poep" 
+                },
+                { 
+                    tekst: "Streel langzaam een gebied dat uw partner normaal verbergt (bv. de achterkant van de knieholte), met één nagel. X minuten", type: "tijd", count: 2, unit: "minuut",
+                    info: "Zoek gevoelige en opwindende plaatsen die je niet zou verwachten", 
+                    Tegenprestatie1: "Laat uw partner in en aan uw oren bijten gedurende 1 minuut", Tegenprestatie2: "Komende week mag je qua drank enkel water drinken" 
+                }
+            ],
+            Dame: [
+                { 
+                    tekst: "Blinddoek uw partner.— (Zonder de rest van de opdracht te zeggen) <br>Verplicht uw partner een (voorbind)dildo te pijpen gedurende X seconden", type: "tijd", count: 60, unit: "Seconden",
+                    info: "Hint: neem een foto voor een leuk aandenken hieraan", link: "https://thumb-nss.xhcdn.com/a/1Lagv0sei55cdJb4qk29uQ/025/293/634/1280x720.17284512.jpg",
+                    Tegenprestatie1: "Jij brengt anaal een tampon in. Jij mag kiezen bij wie je die inbrengt", Tegenprestatie2: "Lik gedurende 1 minuut aan de eikel van uw partner<br>Zonder hem te laten klaarkomen" 
+                },
+                { 
+                    tekst: "Leg je op je buik terwijl je partner zachtjes over je billen en rug streeld gedurende X seconden",  type: "tijd", count: 38, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Geef 12 harde slagen aan u partner op een plaats naar zijn keuze", 
+                    Tegenprestatie2: "Je doet u partner een mondgag aan tot het spel verreist dat deze uit gaat" 
+                },
+                { 
+                    tekst: "Blinddoek uw partner. (Zonder de rest van de opdracht te zeggen) <br>Plaag u partner door hem sensueel aan te raken en te kussen ontwijk de schaamstreek gedurende X minuten",  type: "tijd", count: 8, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Geef 15 harde slagen aan u partner op zijn poep", 
+                    Tegenprestatie2: "Je doet u partner een mondgag aan tot het spel verreist dat deze uit gaat" 
+                },
+                { 
+                    tekst: "Kies een onderbroek van jouw je partner (geen string) laat u partner deze aandoen tot het spel anders zegt",  type: "tijd", count: 38, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Geef 15 harde slagen aan u partner op zijn poep", 
+                    Tegenprestatie2: "uitvoeren binnen 30 dagen: zoek elk 15 erotische koppel foto's elke foto jullie niet dubbel hebben moeten jullie exact nadoen je moet 1 foto kiezen en deze post je op een sosiale media elke persoon dat een like stuurt of commend plaatst stuur je de volledige foto reeks" 
+                },
+                { 
+                    tekst: "Blinddoek uw partner. (Zonder de rest van de opdracht te zeggen) <br>Haal 3 ijsblokjes in een glas laat 2 smelten door deze sensueel te wrijven over het lichaam van u partner. op het einde van de opdracht giet het smelt water van de derde over het hoofd van u partner",  type: "geen",
+                    info: "",
+                    Tegenprestatie1: "Geef 15 harde slagen met de pijnlijkste zweep dat jullie hebben aan u partner op zijn poep", 
+                    Tegenprestatie2: "Je doet u partner een mondgag aan tot het spel verreist dat deze uit gaat" 
+                },
+                { 
+                    tekst: "Uitvoeren binnen de 30 dagen: Laat u partner een account maken op een dating app van alle matchen mag je X aantal personen kiezen die je uitnodigd voor een (erotische)date waar u partner moet toekijken en jullie bedienen",  type: "tijd", count: 3, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Jij mag kiezen wie dit bij wie uitvoert: zoek beiden alle wasknijpers jullie kunnen vinden een iemand moet naakt armen achter het hoofd en benen gespreid plaats alle wasknijpers jullie kunnen vinden hebben hangt de partner een voor een op en neemt 5 foto alvorens deze een voor een er af haalt", 
+                    Tegenprestatie2: "Jij brengt een butplug of tampon in bij je partner op 5 random momenten snak je deze uit uit en steek je deze der terug in (deze blijft aan voor de rest van het spel mag enkel uit als dit verreist is voor een opdracht en jij steekt deze er vervolgens terug in)" 
+                },
+                { 
+                    tekst: "Streel je eigen lichaam op een erotische mannier terwijl je je partner verlangend kust gedurende X minuten",  type: "tijd", count: 3, unit: "minuut",
+                    info: "",
+                    Tegenprestatie1: "Laat je partner naakt staan (armen achter het hoofd en benen gespreid) plaats alle wasknijpers jullie kunnen vinden hang deze een voor een op je partnerneem 5 foto alvorens jij deze een voor een er af haalt. Deze foto is 1 van de achtergrond van jullie chat voor 1 maand op elk kanaal", 
+                    Tegenprestatie2: "Jij brengt anaal een tampon in. Jij mag kiezen bij wie je die inbrengt deze blijft in tot het spel anders zegt." 
+                },
+                { 
+                    tekst: "Zoek een chocker bh, jij kiest er één en koop 2 stuks (jij trakteert)<br>jij Kiest een vaste dag waarop jullie beiden deze bh moeten dragen (de persoon die dit vergeet moet de partner masseren)", type: "geen", 
+                    info: "Laat jullie maandelijks dezelfde bh dragen. Het is jullie stille, intieme ritueel; een exclusieve, gedeelde esthetiek die jullie wederzijdse verbondenheid elke maand opnieuw bezegelt.", link: "https://fl.bonprix.be/bh-met-afneembare-choker/p-3736833416/913879/?itemOptionId=3736833976&promo=BH%27s&landmark=Entry&typ=PLA&anbieter=google_pmax&aktion=BE_PLA_S24_pMax_all_FL&version=3736833976&matchkey=21901302463&entrysourceID=&gad_source=1&gad_campaignid=21890942859&gbraid=0AAAAADSaC96rOMoQtvxRojPX6d1XwGHU9&gclid=CjwKCAjwtcHPBhADEiwAWo3sJo4cehjOciWZ2QNeqV0mujtV2xr7jBeYHXDBlWBTBq4Aia9EL2iTyxoCIH4QAvD_BwE",
+                    Tegenprestatie1: "Zit geknield naast het bed en geef uw partner een voetmassage.", 
+                    Tegenprestatie2: "geef 10 slagen in de balzak van uw partner." 
+                },
+                { 
+                    tekst: "uit te voeren binnen de 30 dagen: geef je partner de opdracht om een butplug te dragen (terwijl jullie naar vrienden of familie gaan)", type: "geen", 
+                    info: "",
+                    Tegenprestatie1: "Jij draagt komende nacht een butplug tijdens de gehele nacht een butplug", 
+                    Tegenprestatie2: "Nieuwe leefregel: je partner moet elke keer jullie uit huis gaan een butplug dragen" 
+                },
+                { 
+                    tekst: "Zoek een collar, jij kiest er één zonder samenspraak (hij trakteert)<br>De moment dat deze aankomt moet je partner deze altijd dragen (uitgezonderd op het werk en bij familie en dichte vrienden)<br><br> (elke keer hij dit vergeet doe je hem tepelklemmen aandoen en moet hij je masseren tot jij zegt dat het genoeg is dan doe jij de tepelklemmen uit)", type: "geen", 
+                    info: "Laat hem de ketting dragen. Het is jullie stille, intieme ritueel; een exclusieve, die aan jij aan iedereen kan tonen dat hij jouw eigendom is.", link: "https://www.shieldmaidenjewelry.com/products/mens-discreet-day-collar-bdsm-submissive-58732?variant=45317033066633&country=AT&currency=EUR&utm_medium=product_sync&utm_source=google&utm_content=sag_organic&utm_campaign=sag_organic&gad_source=1&gad_campaignid=23734447596&gbraid=0AAAAAosgPomUodkfg7XdtqNzpzYvIp2Bz&gclid=CjwKCAjwtcHPBhADEiwAWo3sJjAOTtwGbMrucf25J2qVmTyEK1z88cZOvNs5YOGns8DAHt3wg_odnxoCr5QQAvD_BwE",
+                    Tegenprestatie1: "Zit geknield naast het bed en geef uw partner een voetmassage.", 
+                    Tegenprestatie2: "geef 10 slagen in de balzak van uw partner." 
+                },
+                { 
+                    tekst: "Plan een erotische date in waarmee jij uw partner zal verrassen", type: "geen", 
+                    info: "", link: "https://www.1001activiteiten.nl/erotische-uitjes",
+                    Tegenprestatie1: "Plan een seksdate met 2 mannen zonder dat uw partner hiervan vooraf is verwittigd.<br><br>Laat hem vastgebonden toekijken.", Tegenprestatie2: "Voer elk van de volgende opdrachten en tegenprestaties waar een getal op staat dubbel uit (Dit geldt enkel voor jouw opdrachten)" 
+                },
+                { 
+                    tekst: "Blinddoek uw partner zonder de rest van de opdracht te vertellen.<br>Bind zijn handen op zijn rug en neuk hem anaal.<br>Indien er reeds iets anaal inzit, haal dit eruit", type: "geen", 
+                    info: "", link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcNosqQI1c2J2XoVKMwMKi475_V7w50xtXpA&s",
+                    Tegenprestatie1: "Doe beiden een nylonkousenbroek aan", 
+                    Tegenprestatie2: "Uw partner hangt zo veel mogelijk wasknijpers aan u. <br>Per wasknijper die blijft hangen masseer jij hem 10 seconden op een niet-erotische plaats" 
+                },
+                { 
+                    tekst: "Speel een spel Strippoker tot op ondergoed", type: "geen", 
+                    info: "", link: "https://strippoker.app/nl/rules/",
+                    Tegenprestatie1: "Doe beiden een nylonkousenbroek aan", 
+                    Tegenprestatie2: "Uw partner hangt zo veel mogelijk wasknijpers aan u. <br>Per wasknijper die blijft hangen masseer jij hem 10 seconden op een niet-erotische plaats." 
+                },
+                { 
+                    tekst: "Zorg ervoor dat uw partner een stijve penis krijgt binnen de X seconden, zonder het geslachtsdeel van uw partner aan te raken.", type: "tijd", count: 60, unit: "seconden",
+                    info: "Wees creatief door gevoelige plaatsen aan te raken, beelden te tonen en te zeggen wat je met hem gaat doen... <br> deze beelden helpen meestal wel", link: "https://www.google.com/search?q=hubby+bondage+cuckold+cartoon&tbnid=iWf-Le_IamLz4M&tbnh=0&tbnw=0&cs=0&rlz=1C1GCEA_enBE1122BE1122&sca_esv=7154391049cab9c6&udm=2&biw=2560&bih=1271&sxsrf=ANbL-n4oZeRFtD3oJSVKN8mA-VYxy-D9Cw%3A1771942795362&ei=i7OdaaXhFb279u8PhZ_TiAI&ved=0ahUKEwjl0oSnqfKSAxW9nf0HHYXPFCEQ4dUDCBI&uact=5&oq=hubby+bondage+cuckold+cartoon&gs_lp=Egtnd3Mtd2l6LWltZyIdaHViYnkgYm9uZGFnZSBjdWNrb2xkIGNhcnRvb25ImxJQ2QVY-w9wAXgAkAEAmAFNoAHOA6oBATe4AQPIAQD4AQGYAgCgAgCYAwCIBgGSBwCgB7sCsgcAuAcAwgcAyAcAgAgA&sclient=gws-wiz-img#sv=CAMSVhoyKhBlLTd5dExmeklrWGVyS21NMg43eXRMZnpJa1hlckttTToOZFhFUDZ5dmhRWmtSNE0gBCocCgZtb3NhaWMSEGUtN3l0TGZ6SWtYZXJLbU0YADABGAcg6dLe2wYwAkoIEAIYAiACKAI",
+                    Tegenprestatie1: "Kies een vaste dag in de maand waarop jullie beiden maandelijks een kousenbroek dragen", Tegenprestatie2: "Uw partner hangt zo veel mogelijk wasknijpers aan u. <br>Per wasknijper die blijft hangen masseer jij hem 10 seconden op een niet-erotische plaats" 
+                },
+                { 
+                    tekst: "Blinddoek uw partner.<br>Doe de onderbroek aan waarvan je vermoedt dat het uw partners favoriete onderbroek van jou is. Hij moet geblinddoekt raden welke onderbroek dit is. Hij heeft X minuten.", type: "tijd", count: 2, unit: "minuut",
+                    info: "Kies geen string en een model dat je niet vaak draagt om het hem moeilijk te maken",
+                    Tegenprestatie1: "Verras je partner.<br>Koop 2 dezelfde kleedjes. Op 1 dag per maand moeten jullie deze kleedjes dragen tijdens de tijd dat jullie alleen zijn.<br><br>Zorg ervoor dat jullie zo veel mogelijk alleen zijn.", Tegenprestatie2: "Laat uw partner in en aan uw oren likken gedurende 30 seconden" 
+                },
+                { 
+                    tekst: "Breng een koud, nat washandje met ijsblokken aan op de borst of het geslachtsdeel van uw partner en laat het daar liggen tot het warm is", type: "geen",
+                    info: "Beweeg deze om vrieswonden te voorkomen",
+                    Tegenprestatie1: "Doe de kousen van uw partner uit door enkel gebruik te maken van uw mond", Tegenprestatie2: "Lik gedurende 1 minuut aan de eikel van uw partner<br>Zonder hem te laten klaarkomen" 
+                },
+                { 
+                    tekst: "Draag de hoogste hakken die uw partner kiest. Tot deze uit moeten voor het spel.", type: "geen",
+                    info: "Het dragen van hakken kan je vrouwelijker laten voelen en uw partner opwinden",
+                    Tegenprestatie1: "Uw partner hangt zo veel mogelijk wasknijpers aan u. <br>Per wasknijper die blijft hangen masseer jij hem 10 seconden op een niet-erotische plaats", Tegenprestatie2: "Uw partner doet uw kousen uit; hiermee mag hij enkel zijn mond gebruiken" 
+                },
+                { 
+                    tekst: "Laat uw partner op zijn rug liggen. Jij kust de binnenkant van zijn knie en gaat rustig naar boven, zonder het geslachtsdeel te kussen.<br>Geef X kussen.", type: "tijd", count: 25, unit: "minuut",
+                    info: "Het gaan in de richting van uw partners geslachtsdeel zal ervoor zorgen dat hij een opgewonden gevoel krijgt", 
+                    Tegenprestatie1: "Kies een vaste dag in de maand waarop jullie beiden maandelijks geen onderbroek dragen", Tegenprestatie2: "Keten de handen van uw partner aan elkaar en doe hem tepelklemmen aan. Hij moet je masseren gedurende de tijd op een willekeurige timer (zonder te stoppen; stoppen = opnieuw met nieuwe timer)." 
+                },
+                { 
+                    tekst: "Zeg je partner welk seksspeeltje jij het leukst vindt om te gebruiken om je partner te domineren", type: "geen",
+                    info: "", link: "",
+                    Tegenprestatie1: "Verras je partner.<br>Koop 2 dezelfde strings. Op 1 dag per maand moeten jullie deze strings dragen. De tijd dat jullie alleen zijn moeten jullie een spel spelen om te bepalen wie alle kleren behalve de string moet uitdoen.", Tegenprestatie2: "Keten de handen van uw partner aan elkaar en doe hem tepelklemmen aan. Hij moet je masseren gedurende de tijd op een willekeurige timer (zonder te stoppen; stoppen = opnieuw met nieuwe timer)." 
+                },
+                { 
+                    tekst: "Streel langzaam een gebied dat uw partner normaal verbergt (bv. de achterkant van de knieholte), met één nagel. X minuten", type: "tijd", count: 2, unit: "minuut",
+                    info: "Zoek gevoelige en opwindende plaatsen die je niet zou verwachten", 
+                    Tegenprestatie1: "Keten de handen van uw partner aan elkaar en doe hem tepelklemmen aan. Hij moet je masseren gedurende de tijd op een willekeurige timer (zonder te stoppen; stoppen = opnieuw met nieuwe timer).", Tegenprestatie2: "Verras je partner.<br>Koop 2 dezelfde strings. Op 1 dag per maand moeten jullie deze strings dragen. De tijd dat jullie alleen zijn moeten jullie een spel spelen om te bepalen wie alle kleren behalve de string moet uitdoen." 
+                }
+            ],
+            Ander: [
+                { tekst: "Verstrengel jullie vingers en deel je warmste herinnering.", type: "geen", info: "Samen herinneringen ophalen versterkt jullie gedeelde geschiedenis." },
+                { tekst: "Fluister een geheim verlangen in het oor.", type: "geen", info: "Intimiteit groeit door het delen van geheimen." },
+                { tekst: "Geef X tedere kusjes op het gezicht.", type: "aantal", min: 3, max: 7, info: "Kleine aanrakingen bouwen spanning op." },
+                { tekst: "Houd elkaar vast in stilte voor X seconden.", type: "tijd", count: 25, info: "Soms is stilte de krachtigste taal." }
+            ]
+        };
+
+        // SUPER SOFT POOL: Te gebruiken buiten piekuren
+        const supersoftPool = {
+            Heer: [
+                { 
+                    tekst: "trek de slip van je partner uit je partner steekt deze in je mond en plakt deze vast voor X beurten", 
+                    type: "tijd", count: 5, unit: "minuten",
+                    info: "Proev hoe opgewinden je partner al is", 
+                    Tegenprestatie1: "Doe 20 push-ups naakt bovenop haar terwijl je pik tegen haar aan drukt.",
+                    Tegenprestatie2: "Laat haar je ballen 30 seconden masseren"
+                },
+                { 
+                    tekst: "Lik haar voeten en tenen langzaam en uitgebreid terwijl je haar aankijkt. voor X seconden", 
+                    type: "tijd", count: 2, unit: "minuten",
+                    info: "Een submission-dare die veel vrouwen ontzettend opwindend vinden.", 
+                    Tegenprestatie1: "Laat haar je billen 10 keer hard slaan terwijl je over haar schoot ligt.",
+                    Tegenprestatie2: "Laat haar je pik 1 minuut met haar voeten masseren."
+                },
+                { 
+                    tekst: "Ga op je knieën voor je partner zitten je partner matrubeert je met haar voeten zij mag kiezen als ze jouw laat klaarkomen", 
+                    type: "geen", 
+                    info: "Voeg dirty talk toe. Dit is een sterke dominantie/submissie opdracht.", 
+                    Tegenprestatie1: "Trek haar lingerie aan tot het spel anders zegt.",
+                    Tegenprestatie2: "Geef haar een intense body kiss van top tot teen."
+                },
+                { 
+                    tekst: "Doe een butplug in voor de rest van het spel", 
+                    type: "geen", 
+                    info: "Ze mag het inbrengen en bewegen. Zeer stout en intiem.", 
+                    Tegenprestatie1: "Trek haar lingerie aan tot het spel anders zegt.",
+                    Tegenprestatie2: "Laat haar je tepels bijten en likken."
+                },
+                { 
+                    tekst: "Geef haar een intense nek- en borstkus terwijl je je harde pik tegen haar aan drukt voor X seconden", 
+                    type: "tijd", count: 20, unit: "minuten",
+                    info: "Gebruik je hele lichaam om haar te verleiden.", 
+                    Tegenprestatie1: "Laat je partner 5 erotische fotos van je nemen naar keuze",
+                    Tegenprestatie2: "Laat haar je gezicht berijden (facesitting) voor 5 minuten"
+                },
+                { 
+                    tekst: "Ga naakt staan, spreid je benen en laat haar je ballen en pik bepotelen voor x minuten", 
+                    type: "tijd", count: 5, unit: "minuten",
+                    info: "Je mag niet bewegen. Dit is verrassend gevoelig voor veel mannen en geeft een machtsspelletje.", 
+                    Tegenprestatie1: "Laat je partner 5 erotische fotos van je nemen naar keuze",
+                    Tegenprestatie2: "Laat haar je billen 10 keer slaan."
+                },
+                { 
+                    tekst: "Laat haar je tepels bijten voor x seconden terwijl je je handen boven je hoofd houdt", 
+                    type: "tijd", count: 350, unit: "minuten",
+                    info: "Je mag niet bewegen. Dit is verrassend gevoelig voor veel mannen en geeft een machtsspelletje.", 
+                    Tegenprestatie1: "Geef haar een lange, diepe kus terwijl je pik tegen haar aan drukt.",
+                    Tegenprestatie2: "Laat haar je aftrekken met haar borsten."
+                },
+                { 
+                    tekst: "Masseer haar billen en rug X minuten lang met olie, terwijl je alleen een string of helemaal naakt bent.", 
+                    type: "tijd", count: 2, unit: "minuten",
+                    info: "Gebruik je hele lichaam (borst, pik, handen) tijdens de massage voor extra contact.", 
+                    Tegenprestatie1: "Trek een buttplug in terwijl zij kijkt. deze blijft in voor zolang zij wenst",
+                    Tegenprestatie2: "Laat haar je gezicht berijden (facesitting) voor 10 minuten"
+                },
+                { 
+                    tekst: "Trek een van haar lingerie-sets aan (string, bh en kousen) tot het spel anders zegt", 
+                    type: "geen", 
+                    info: "Hoe vrouwelijker en strakker, hoe beter. Dit zorgt meestal voor veel lach en opwinding tegelijk.", 
+                    Tegenprestatie1: "Trek meteen al je kleding uit en blijf naakt.",
+                    Tegenprestatie2: "Laat je partner 5 erotische fotos van je nemen naar keuze"
+                },
+                { 
+                    tekst: "Ga in doggy-stijl positie op bed liggen u partner steekt een dildo anal. blijf stil liggen voor X seconden", 
+                    type: "tijd", count: 2, unit: "minuten",
+                    info: "Een hele onderdanige en expliciete pose. Voelt kwetsbaar maar ontzettend opwindend voor haar om te zien.", 
+                    Tegenprestatie1: "Laat haar je aftrekken met haar borsten.",
+                    Tegenprestatie2: "Doe een mondgag aan voor 4 beurten "
+                },
+                { 
+                    tekst: "Laat haar op de bank zitten en kus/ lik haar hele lichaam van haar nek tot aan haar dijen", 
+                    type: "tijd", count: 2, unit: "minuten",
+                    info: "Bouw enorme spanning op door haar langzaam te plagen met je mond en tong.", 
+                    Tegenprestatie1: "Trek een buttplug in terwijl zij kijkt. deze blijft in voor zolang zij wenst",
+                    Tegenprestatie2: ""
+                },
+                { 
+                    tekst: "Laat haar een vinger (of meer) in je kont voor X keer", 
+                    type: "tijd", count: 5, unit: "minuten",
+                    info: "", 
+                    Tegenprestatie1: "Doe een mondgag aan voor 4 beurten ",
+                    Tegenprestatie2: "Laat je partner 5 erotische fotos van je nemen naar keuze"
+                },
+                { 
+                    tekst: "Laat haar je tepels knijpen voor x seconden terwijl je je handen boven je hoofd houdt", 
+                    type: "tijd", count: 320, unit: "minuten",
+                    info: "Je mag niet bewegen. Dit is verrassend gevoelig voor veel mannen en geeft een machtsspelletje.", 
+                    Tegenprestatie1: "Doe een mondgag aan voor 4 beurten ",
+                    Tegenprestatie2: "Trek een buttplug in terwijl zij kijkt. deze blijft in voor zolang zij wenst"
+                },
+            ],
+            Dame: [
+                { 
+                    tekst: "Ga op je partners schoot zitten en doe X seconden lang een langzame grinding beweging.", 
+                    type: "tijd", count: 30, unit: "minuten",
+                    info: "Zit schrijlings op zijn schoot en beweeg je heupen langzaam heen en weer of in cirkels. Dit simuleert seks en laat je partner voelen hoe opgewonden je bent.",
+                    Tegenprestatie1: "Trek meteen je bh en slipje uit en blijf de rest van het spel zonder ondergoed.",
+                    Tegenprestatie2: "Kus je partner 1 minuut lang heel nat en vies op de mond."
+                },
+                { 
+                    tekst: "Trek je slipje uit zonder je rok of jurk omhoog te doen en geef het aan je partner.", 
+                    type: "geen",
+                    info: "Doe dit staand of zittend op een uitdagende manier. Geef het slipje daarna aan je partner (bijvoorbeeld in zijn/haar mond of hand). Het is extra spannend omdat je nu “naakt” bent onder je kleding.",
+                    Tegenprestatie1: "Trek zijn slipje uit met je tanden.",
+                    Tegenprestatie2: "Trek meteen je bh en slipje uit en blijf de rest van het spel zonder ondergoed."
+                },
+                { 
+                    tekst: "Laat je partner je borsten X seconden masseren terwijl je je handen boven je hoofd houdt.", 
+                    type: "aantal", min: 25, max: 7,
+                    info: "Hou je armen omhoog zodat je helemaal kwetsbaar bent. Je partner mag alleen je borsten aanraken. Dit zorgt voor een heerlijk machtsverschil.",
+                    Tegenprestatie1: "Kneed de balzak van je partner gedurende 3 minuten",
+                    Tegenprestatie2: "Stuur een expliciete naaktfoto + sext naar je partner en 2 andere mannen."
+                },
+                { 
+                    tekst: "Masturbeer jezelf X minuut lang terwijl je partner toekijkt (je mag kleding aanhouden als je wilt).", 
+                    type: "aantal", count: 2,
+                    info: "Raak jezelf aan op een plek die je partner goed kan zien. Beschrijf hardop hoe het voelt. Dit is heel intiem en exhibitionistisch.",
+                    Tegenprestatie1: "uit te voeren binnen de 30 dagen: Stuur je partner een week een hele expliciete sextings + een foto van je lichaam (bijv. je borsten of billen).",
+                    Tegenprestatie2: "Als jullie alleen zijn moet jij in enkel je lengerie zijn gedurende 7 dagen "
+                },
+                { 
+                    tekst: "Lik langzaam aan een ijsje of banaan op een zo sensueel mogelijke manier.", 
+                    type: "geen",
+                    info: "Gebruik je tong uitgebreid, kijk je partner aan en maak zachte geluidjes. Dit is een klassieke tease die direct aan orale seks doet denken.",
+                    Tegenprestatie1: "Kneed de balzak van je partner gedurende 3 minuten",
+                    Tegenprestatie2: "Stuur een expliciete naaktfoto + sext naar je partner en 2 andere mannen."
+                },
+                { 
+                    tekst: "Laat je partner je tepels X seconden lang likken of zuigen.", 
+                    type: "aantal", count: 120,
+                    info: "Trek je top omhoog of uit en laat je partner volledig focussen op je tepels. Vraag eventueel om zacht of juist harder te doen.",
+                    Tegenprestatie1: "Trek alleen lingerie en hoge hakken aan voor de rest van het spel.",
+                    Tegenprestatie2: "Lik 30 seconden aan de vingers van je partner."
+                },
+                { 
+                    tekst: "Trek je bh uit en blijf de rest van het spel zonder bh rondlopen.", 
+                    type: "geen",
+                    info: "Doe dit zichtbaar voor je partner. Je tepels zullen zichtbaar worden door je kleding heen ideaal voor aanhoudende visuele opwinding.",
+                    Tegenprestatie1: "Laat je partner je clit 1 minuut masseren met een vibrator.",
+                    Tegenprestatie2: "Doe een volledige striptease."
+                },
+                { 
+                    tekst: "Ga in doggy-stijl positie op bed liggen, trek je slipje opzij laat je partner peitreren en blijf X seconden zo stil zitten.", 
+                    type: "aantal", count: 180,
+                    info: "Dit is een hele onderdanige en expliciete pose. Je partner ziet alles zonder dat hij je direct aanraakt  perfecte teasing.",
+                    Tegenprestatie1: "Geef je partner een blowjob van 45 seconden",
+                    Tegenprestatie2: "Laat je partner je tepels 40 seconden bijten."
+                },
+                { 
+                    tekst: "Kus je partner heel traag en nat over zijn hele nek en borst voor X seconden", 
+                    type: "aantal", count: 80,
+                    info: "Gebruik veel tong, zuig zachtjes en adem warm tegen de huid. Dit is een voorspel-dare die je partner gek maakt van verlangen.",
+                    Tegenprestatie1: "Laat je partner je billen 10 keer hard slaan terwijl je over zijn schoot ligt.",
+                    Tegenprestatie2: "Doe 20 push-ups op je partner (borst tegen borst)."
+                },
+                { 
+                    tekst: "Laat je partner een vibrator tegen je aan houden (boven kleding) voor X seconden.", 
+                    type: "aantal", count: 50,
+                    info: "Je mag niet komen, alleen voelen. Dit is heerlijk als je al gevoelig bent – de trillingen zorgen voor intense opwinding.",
+                    Tegenprestatie1: "Laat je partner je billen 8 keer slaan.",
+                    Tegenprestatie2: "Masturbeer jezelf 30 seconden bovenop je partner."
+                },
+                { 
+                    tekst: "Trek alleen hoge hakken en lingerie aan en loop langzaam door de kamer terwijl je partner kijkt voor X seconden", 
+                    type: "aantal", count: 25,
+                    info: "Loop als een model, draai rond, buig voorover en laat je partner genieten van het uitzicht. Voel je sexy en gewaardeer",
+                    Tegenprestatie1: "Lik langzaam over de pik van je partner",
+                    Tegenprestatie2: "Laat je partner 5 erotische fotos van je nemen naar keuze"
+                },
+                { 
+                    tekst: "Masturbeer je partner met je borsten (tittyfuck) voor X seconden", 
+                    type: "aantal", count: 480,
+                    info: "Kniel voor je partner, duw je borsten tegen elkaar en beweeg op en neer. Dit voelt heel visueel en dominant voor jou.",
+                    Tegenprestatie1: "Trek een buttplug in terwijl zij kijkt. deze blijft in voor zolang zij wenstLaat je partner je van achteren 30 seconden voelen",
+                    Tegenprestatie2: "Geef een footjob met je voeten (met kleding aan)."
+                },
+                { 
+                    tekst: "Ga naakt op je rug liggen, spreid je benen en laat je partner je x minuten lang filmen en foto's nemen zonder je aan te raken.", 
+                    type: "aantal", count: 1,
+                    info: "Dit is pure kwetsbaarheid en exposure. Je partner mag alleen filmen – extreem opwindend voor beide.",
+                    Tegenprestatie1: "Trek een buttplug in terwijl hij kijkt. deze blijft in voor zolang hij wenst",
+                    Tegenprestatie2: "Laat je partner 5 erotische fotos van je nemen naar keuze"
+                },
+                { 
+                    tekst: "Kies een seksspeeltje en laat je partner het bij je gebruiken voor minuten terwijl jij beschrijft wat hij moet doen", 
+                    type: "aantal", count: 38,
+                    info: "Bijvoorbeeld een dildo, vibrator of buttplug. Praat vies terwijl het speeltje in je zit/beweegt. Dit is een van de stoutste opties.",
+                    Tegenprestatie1: "Doe een sensuele dans op schoot van je partner.",
+                    Tegenprestatie2: "Laat je partner in je mond klaarkomen"
+                }
+            ],
+            Ander: [
+                { 
+                    tekst: "Deel een droom of wens die je voor de toekomst van jullie tweeën hebt.", 
+                    type: "geen",
+                    info: "Samen dromen verbindt.",
+                    Tegenprestatie1: "Vertel wat je morgen samen zou willen doen.",
+                    Tegenprestatie2: "Geef een warme knuffel."
+                },
+                { 
+                    tekst: "Maak een oprecht compliment over de uitstraling van uw partner vandaag.", 
+                    type: "geen",
+                    info: "Iedereen vindt het fijn om gezien en gewaardeerd te worden.",
+                    Tegenprestatie1: "Geef een kus op de neus.",
+                    Tegenprestatie2: "Houd elkaars pink vast voor 1 minuut."
+                },
+                { 
+                    tekst: "Schrijf een kort, lief briefje (of appje) en voeg X emoji's toe.", 
+                    type: "aantal", min: 3, max: 6,
+                    info: "Een geschreven boodschap blijft langer hangen.",
+                    Tegenprestatie1: "Teken een hartje op de hand van je partner.",
+                    Tegenprestatie2: "Zeg 'Ik hou van je' in een andere taal."
+                }
+            ]
+        };
+
+        function isHardModeTime() {
+            const now = new Date();
+            const day = now.getDay(); // 0=Sun, 1=Mon, ..., 5=Fri, 6=Sat
+            const hour = now.getHours();
+            
+            // Friday (5), Saturday (6), Sunday (0) are always hard mode
+            if (day === 5 || day === 6 || day === 0) return true;
+            
+            // Any day after 18:00 is hard mode
+            if (hour >= 18) return true;
+            
+            return false;
+        }
+
+        // FASE 2: Vaste Volgorde (Verdieping & Gesplitst)
+        const fase2Lijst = {
+            Heer: [
+                { 
+                    tekst: "Bespreek met uw partner 5 regels die uw partner gedurende X dagen zal volgen.<br>Elke regel dat overtreden word kies je partner een gepaste straf voor.<br><br>Elke straf dat u partner u moet geven moet je 2 dagen langer de leefregels volgen", type: "day", count: 28, unit: "dagen",
+                    info: "Hoe strenger de dame is hoe langer deze uitdaging blijft duren", link: "https://funproduction.github.io/Spank/?article=3-minuten-regel",
+                    Tegenprestatie1: "Uw partner kiest 3 regels die je gedurende 2 maanden moet volgen zonder overleg", 
+                    Tegenprestatie2: "Voer de opdracht dubbel uit: Bespreek met uw partner 6 regels die u gedurende 76 dagen zal volgen" 
+                },
+                { 
+                    tekst: "Laat uw partner al uw kleren uitdoen.<br>Enkel je onderbroek mag aanblijven",type: "geen",
+                    info: "", 
+                    Tegenprestatie1: "Kies 5 pijnspeeltjes. Laat je blinddoeken; uw partner moet deze pijnspeeltjes onophoudelijk gebruiken gedurende minimaal 5 minuten.<br>Per keer dat jij geluid maakt of beweegt, wordt de huidige tijd verrekend.<br>Voorbeeld: Na 1 minuut slagen schermt hij af; overige tijd 4 minuten. 4 maal 2 = 8. <br>8 minuten extra bij de tijd.<br>Na 2 minuten beweegt hij opnieuw (tijd start op 12 minuten)...", 
+                    Tegenprestatie2: "Je krijgt een cock cage voor de rest van het spel." 
+                },
+                { 
+                    tekst: "Leg alle speeltjes open naast elkaar. Behalve bondage toys (touwen, boeien ...)<br>Kies elk om de beurt een speeltje dat gebruikt op de ander<br>Dit telkens X seconden.de eerste dat 3 keer stopwoord gebruikt is verloren en moet een tegenprestatie kiezen", type: "tijd", count: 330, unit: "minuut",
+                    info: "info", link: "https://cdn.thekinkykingdom.com/2017/10/toy-collection.jpg",
+                    Tegenprestatie1: "Draag tepelklemmen die je partner met zijn/haar voeten mee speelt", 
+                    Tegenprestatie2: "Uitvoeren binnen de 7 dagen: Koop 5 vernederende seksspeeltjes op naam van u partner zonder dat u partner weet wat dit is. Indien dit uniseks is mag u partner kiezen bij wie dit gebruikt word" 
+                },
+                { 
+                    tekst: "laat u vastbinden door u partner: in 'bunny tie'. Zorg ervoor dat je partner niet los kan geraken tot het einde van het spel",type: "geen",
+                    info: "indien je los geraakt mar je parnter boeien gebruiken", link: "https://www.youtube.com/watch?v=yveX4Fhqszk",
+                    Tegenprestatie1: "Je partner bind je armen vast aan je nek met metale kettingen en hangsloten achter de nek voor de rest van het spel", 
+                    Tegenprestatie2: "Je partner bind je volledig vast doet je tepelklemmen en mondgag aan. laat je alleen zoekt een sekspartner komt pas terug met een sekspartner op na 2 uur" 
+                },
+                { 
+                    tekst: "Vanaf nu leest uw partner alle opdrachten en tegenprestaties en zegt enkel wat echt nodig is om de opdracht uit te voeren", type: "geen",
+                    info: "Jij mag de opdrachten en tegenprestaties niet weten, enkel je partner", 
+                    Tegenprestatie1: "Pijp een dildo je partner bepaald hoe diep", 
+                    Tegenprestatie2: "35 harde slagen + “Dank u wel Mistress” zeggen." 
+                }
+            ],
+            Dame: [
+                { 
+                    tekst: "Doe een onderbroek aan die je niet erg zou vinden dat deze kapot zou zijn maar dat je denkt dat je partner je opwindend in vind.", type: "geen",
+                    info: "Deze onderbroek zal na het spel kapot zijn en dus in de vuilbak moeten", 
+                    Tegenprestatie1: "Doe het meest sexy ondergoed dat je hebt aan", 
+                    Tegenprestatie2: "Je moet je partner mastruberen met je handen gebonden achter je rug tot hij klaarkomt. Speel hierna verder" 
+                },
+                { 
+                    tekst: "Wissel van ondergoed met uw partner.<br>jij doet de onderbroek aan dat u partner draagt hij deze dat jij draagt", type: "geen",
+                    info: "Het wisselen van ondergoed zorgt voor een geurige nabijheid en speelse spanning. Het is een intieme daad die de grenzen doet vervagen.", link: "https://i.ytimg.com/vi/ANVGgDBX_J0/maxresdefault.jpg",
+                    Tegenprestatie1: "Kies een setje lingerie (bh, string en kousenbroek) van jou dat hij moet aandoen.", 
+                    Tegenprestatie2: "Extra leefregel: het is verboden voor de man om op de bank te zitten als jullie alleen zijn (hij moet geknield jouw voeten ondersteunen met zijn handen en met zijn gezicht naar jou)." 
+                },
+                { 
+                    tekst: "Neem X foto's met jouw gsm met de kleren die jullie nu aan hebben in telkens een andere pose", type: "tijd", count: 3, unit: "minuut",
+                    info: "Hieronder enkele poses. Knuffel elkaar voor een spiegel. Laat de persoon met de minste kleren op de knieën zitten naast de partner. Laat de persoon met de minste kleren de voeten kussen van de partner. Laat de persoon met de meeste kleren op de rug zitten van de partner en een erotische pose aannemen. Meer inspiratie op de foto", link: "https://www.deviantart.com/morelikethis/TheDreamDomain/1321775061",
+                    Tegenprestatie1: "Neem een foto van hoe jullie er nu uitzien in een pose gekozen door uw man (hij mag de rest niet weten). Deze foto moet jij doorsturen naar 3 mannen.", 
+                    Tegenprestatie2: "Maak een premium Snapchat-account aan en deel deze op Facebook. Elke foto die je vandaag nog neemt, moet je in je verhaal plaatsen." 
+                },
+                { 
+                    tekst: "Bind uw partner vast: benen in 'Frogtie'. Zorg ervoor dat u de mogelijkheid hebt uw partner om te draaien indien nodig. dit tot het spel anders zegt of tot het einde van het spel",type: "geen",
+                    info: "Bind armen samen en benen samen. Hang deze vast aan het bed.", link: "https://www.youtube.com/watch?v=X30kr6v6ibM",
+                    Tegenprestatie1: "Bind uw partner vast zoals gewenst; zorg ervoor dat jij hem gemakkelijk kan draaien en dat je voldoende plaats naast hem hebt aan 1 zeide van het bed", 
+                    Tegenprestatie2: "Doe uw partner een kuisheidskooi aan en laat de sleutels allemaal verdwijnen (vuilnisbak of wc of in een winkel in een doos elektronica). Vraag na 2 weken aan de verkoper of je een nieuwe sleutel kunt bestellen omdat je deze kwijt bent (het spel eindigt hier)." 
+                },
+                { 
+                    tekst: "Laat uw partner alleen voor minimaal X minuten. <br>Doe een onderbroek (geen string) aan waarvan jij weet dat uw partner die graag ziet.<br>Doe een nylonkousenbroek aan, naaldhakken en een jurkje.<br><br>Indien je een dit gothicstijl hebt, geef hier de voorkeur aan.", type: "tijd", count: 10, unit: "minuut",
+                    info: "Voorbeeldfoto in de link", link: "https://i.pinimg.com/736x/e6/6a/32/e66a32c643b7e6d77cd32550f0104b6f.jpg",
+                    Tegenprestatie1: "Laat uw partner alleen. Vraag de man met wie je het laatst gebeld hebt om te videobellen en samen een set je te kiezen.", 
+                    Tegenprestatie2: "Laat uw partner alleen. Maak een profiel op OnlyFans. Trek 3 lingerie-setjes aan en post deze op OnlyFans, evenals elke foto die je vandaag genomen hebt van jou en/of je partner. Geen uitzonderingen." 
+                }
+            ],
+            Ander: [
+                { tekst: "Masseer de handen met aandacht voor X minuut.", type: "tijd", count: 1, unit: "minuut", info: "Aanraking heelt en verbindt." },
+                { tekst: "Vertel wanneer je je het meest verbonden voelde.", type: "geen", info: "Kwetsbaarheid is kracht." },
+                { tekst: "Ga achter de ander staan en omhels voor X seconden.", type: "tijd", min: 20, max: 40, info: "Bescherming en warmte bieden." },
+                { tekst: "Verzegel dit met een kus van X seconden.", type: "tijd", count: 10, info: "Focus volledig op de lippen." },
+                { tekst: "Deel een droom die je nog samen wilt vervullen.", type: "geen", info: "Toekomstdromen verbinden." }
+            ]
+        };
+
+        const fase3DameLijst = [
+            
+            { tekst: "Doe hem een blinddoek aan. <br>Neem speeltjes dat hij geblinddoekt moet raden binnen de 1 minuut wat jij gebruikt<br>hij moet exact raden welke voorbeel vibrator moet hij beschrijven de roze in de vorm van een penis<br><br>Dit tot hij X speeltjes geraden heeft", 
+            type: "tijd", count: 14, unit: "minuut",
+            info: "" ,
+            Tegenprestatie1: "Vraag de man met wie je het laatst gebeld hebt om te videobellen en samen een set je te kiezen.", 
+            Tegenprestatie2: "Komende 7 dagen moet een van jullie zonder onderbroek lopen. jij mag elke dag kiezen wie." },
+
+            { tekst: "lik je partner over zijn eikel gedurende X minuten. <br>Indien hij klaarkomt moet jij dit inslikken en doorspelen", 
+            type: "tijd", count: 4, unit: "minuut",
+            info: "De eikel van de man is de meest sensuele plaats en zal hem tot een genot brengen" ,
+            Tegenprestatie1: "Ga komende maand 3 keer samen zonnebaden in een zonnebank. Je partner moet een bikini dragen tijdens deze zonnebank sessie", 
+            Tegenprestatie2: "Maak een premium Snapchat-account aan en deel deze op Facebook. Elke foto die je vandaag nog neemt, moet je in je verhaal plaatsen." },
+
+            { tekst: "Uitvoeren binnen 30 dagen: Zoek een seksdate. Ga op uitstap je partner mag niet weten naar waar je gaat hoe lang je weg gaat en mag je niet kunnen volgen. <br>Geef hem de opdracht tegen dat je thuis zijt in ondergoed vastgebonden te zijn met een mondgag tepelklemmen en blinddoek aan zonder dat hij de rest van deze uitdaging weet.<br> zorg dat je tegelijkertijd met je seksdate thuis komen en binnen gaat (in stilte je partner mag hem niet horen)<br>Kom de kamer binnen leg je op je partner en laat de andere man je penitreren doe tijdens de penitratie de blinddoek van je man uit laat hem genieten van het uitzicht.<br>Plaag hem dat zen penis hard word (dat heeft geen zin jij mag enkel maar kijken)", 
+            type: "geen", 
+            info: "Het zien van u partner zien seks hebben met een andere man zorgt bij 84% van de mannen dat ze opgewondern geraken. Eerste keer zal hij dit niet willen als je hem hiertoe forceert dat hij ervan genieten en je achteraf dankbaar zijn. Door het afwisselen van partner zal het voor jouw ook spanend zijn en je dus ook meer genieten dan ooit van deze sekspartij  " ,
+            Tegenprestatie1: "Laat je partner alleen. Maak een account op een dating app. blijf hierop tot je iemand gevonden hebt die per direct naar jullie wilt komen of dat jij kan halen. kom kussend de kamer binnen mastrubeer alkaar of ga over naar penitratie", 
+            Tegenprestatie2: "Uit te voeren binnen de 30 dagen: Laat je partner in een french maid dress het huishouden doen terwijl je een vriend(in) hebt uitgenodigd zorg ervoor dat hij niet weet dat er iemand komt an dat hij zich niet meer kan omkleden door ketting rond de polsen en de nek" },
+              
+            { tekst: "De komende X dagen geef je je partner het gevoel dat hij gedegradeerd is tot enkel nog je slaaf. (hij mag deze uitdaging niet weten en ook niet weten hoe lang je zo zal doen en waarom)<br>Dat hij ook geen keuze heeft dan gehoorzaam te blijven.<br><br>Stuur met andere mannen op een flirterige toon en laat hem dit merken. <br>Een slaaf heeft geen recht op jaloers gedrag te vertonen (jaloers gedrag = die avond slapen in een kooi + een extra dag deze uitdaging)<br>laatste dag stuur je naakt foto's naar andere mannen hij moet deze nemen voor jouw.", 
+            type: "tijd", count: 4, unit: "minuut",
+            info: "Als je partner afgeleerd is jaloers te zijn zal hij beginnen genieten dat jij flirt met andere mannen" ,
+            Tegenprestatie1: "Doe je schoenen uit leg je voeten op de mond van uw partner en laat hem uw voet likken gedurende 3 beurten", 
+            Tegenprestatie2: "Extra leefregel: het is verboden voor de man om op de bank te zitten als jullie alleen zijn (hij moet geknield jouw voeten ondersteunen met zijn handen en met zijn gezicht naar jou)." },
+                { 
+                    tekst: "Uw partner moet binnen 7 dagen per leefregel X straffen bedenken waar jij er één van uitkiest (hij moet de straffen nog niet weten, hij zal deze snel genoeg ontdekken).", type: "day", count: 4, unit: "dagen",
+                    info: "Door het klaarhebben van enkele straffen vermakkelijkt het jouw om hem te straffen bij slecht gedrag en heeft hij een reden om de leefregels te volgen", 
+                    Tegenprestatie1: "Uw partner kiest 3 regels die je gedurende 2 maanden moet volgen zonder overleg", 
+                    Tegenprestatie2: "Voer de opdracht dubbel uit: Bespreek met uw partner 6 regels die u gedurende 76 dagen zal volgen" 
+                },
+           { tekst: "Spit meerdere keren in zijn mond en gezicht en dwing hem te zeggen 'Dank u wel Mistress'.", 
+  type: "geen",
+  info: "Spitting + verbale vernedering.",
+  Tegenprestatie1: "Plan een seksdate met een man dat jij knap vind laat u partner enkele dagen voordien een cuck kooi aandoen. Bind hem vast naast bed aan het voeteinde met zijn gezicht op het bed. Veras hem met je seksdate laat je seksdate je meerdere keren klaarkomen. beloon je partner door hem jouw voeten of de voeten van je partnder te likken ", 
+  Tegenprestatie2: "Facesitting tot hij bijna stikt (herhaaldelijk)." },
+            { tekst: "Leg je schoenen aan de mond van je partner en laat hem likken aan de zool en hak van je schoen gedurende X beurten", 
+            type: "tijd", count: 3, unit: "minuut",
+            info: "Laat hem likken hij zal likken omdat hij je sexy vind" ,
+            Tegenprestatie1: "Doe je schoenen uit tot het einde van deze straf; leg je voeten op de mond van uw partner en laat hem uw voet likken gedurende 3 beurten", 
+            Tegenprestatie2: "Extra leefregel: het is verboden voor de man om op de bank te zitten als jullie alleen zijn (hij moet geknield jouw voeten ondersteunen met zijn handen en met zijn gezicht naar jou)." },
+            { tekst: "Ga boven zijn gezicht zitten en laat hem je x minuten likken terwijl je hem negeert.", 
+  type: "tijd", count: 5, unit: "minuut",
+  info: "Facesitting met volledige controle. Hij mag ademen wanneer jij het toelaat.",
+  Tegenprestatie1: "uit te voeren binnen de 30 dagen: Laat je partner in een french maid dress het huishouden van een mannelijke vriend doen terwijl jullie erotisch onder elkaars kleren zitten", 
+  Tegenprestatie2: "uit te voeren binnen de 30 dagen ga samen naar een zonnenbank en hij moet een bikini dragen onder de zonnenbank" },
+           
+            { tekst: "Uitvoeren binnen 30 dagen: bind je partners handen aan elkaar hij moet je masseren gedurende minimaal X minuten jij zegt stop bij het dubbele van deze tijd", 
+            type: "tijd", count: 26, unit: "minuut",
+            info: "Voor een man is het toekijken hoe zijn partner bevredigd wordt door een andere man extreem vernederend. Bij 83% van de koppels zorgt dit voor een betere relatie" ,
+            Tegenprestatie1: "Maak een account op regioswingers.be waarop je zet dat enkel jij seks wilt terwijl je partner geforceerd word om toe te kijken. de eerste 3 mannen en de eerste 5 koppels dat willen afspreken spreek je ook me af.", 
+            Tegenprestatie2: "Je zet tepelklemmen op hem en laat hem 40 slagen in stilte incasseren voor je de tepelklemmen afhaalt moeten er 40 slagen in stilte geincaseert zijn." },
+           
+                { 
+                    tekst: "U zoekt en kiest een kanten bodycorset en koopt 2 stuks (jij trakteert)<br>Kies een vaste dag waarop jullie beiden deze onderbroek moeten dragen (de persoon die dit vergeet moet de partner masseren) ",
+                    info: "info", link: "https://euqs.shein.com/pdsearch/bodysuit%20woman%20underwear%20kanten/?ici=s1%60EditSearch%60bodysuit%20woman%20underwear%20kanten%60_fb%60d0%60PageSearchNoResult&pre_search_content=hotwife%20cuckold&search_source=1&search_type=all&source=search&src_identifier=st%3D2%60sc%3Dbodysuit%20woman%20underwear%20kanten%60sr%3D0%60ps%3D1&src_identifier_pre_search=null&src_module=search&src_tab_page_id=page_search1771943526603",
+                    Tegenprestatie1: "Uit te voeren binnen 30 dagen: Koop 2 see-through bikini's. Ga samen naar het strand. Doe beiden een bikini aan en ga in de zee. Neem elk om de beurt een foto van de andere tot jullie 20 foto's hebben van elkaar en vervolgens 10 foto's van jullie samen. Post 1 van de foto's samen op een sociale media naar keuze en iedereen die de foto likt krijgt alle foto's", 
+                    Tegenprestatie2: "Extra leefregel. Elke keer dat jullie alleen tv kijken, moet uw partner uw voeten masseren gedurende de volledige tv moment." 
+                },
+                { tekst: "Vertel hem gedetailleerd over de man met wie je seks wilt hebben (niet je partner) wat je met hem wilt doen terwijl je zijn pik plaagt met je voeten.", 
+  type: "geen",
+  info: "Cuckold talk + teasing. Hij blijft vastgebonden.",
+  Tegenprestatie1: "Maak een datingprofiel voor uw partner als homo jij beheert die in zijn naam. Nodig een man terwijl je partner vastgebonden is laat hem bij je partner hij mag doen wat hij wilt met je partner terwijl jij dit filmt.", 
+  Tegenprestatie2: "Stuur naar 5 mannelijke vrienden: 'Ik heb met partner nu vastgebonden heb je tijd om af te komen. ik zou hem eens willen tonen hoe een echte man een dame laat genieten' de eerste die kan mag komen" },
+
+            { 
+            tekst: "Extra leefregel.<br>Elke keer dat jullie samen slapen, moet uw partner u masseren tot jij zegt dat hij mag stoppen (minimaal 5 minuten).<br>Vergeet hij dit uit zen eigen te doen moet hij tepelklemmen aan en je masseren voor minimaal 10 minuter", type: "geen", 
+            info: "Dit zorgt dat hij je graag zal masseren en ook beter en langer zal kunnen uitvoeren", link: "https://www.youtube.com/results?search_query=shoulder+massage+tutorial",
+            Tegenprestatie1: "Sla 150 keer met je blote hand op de kaak van uw partner.", 
+            Tegenprestatie2: "Extra leefregel. Elke keer dat jullie alleen tv kijken, moet uw partner uw voeten masseren gedurende de volledige tv moment." 
+            },
+            { tekst: "Zet tepelklemmen op hem en trek eraan terwijl mat je vagina over zijn neus schuurt voor X minuten.", 
+  type: "tijd", count: 5, unit: "minuut",
+  info: "de pijn zal hem motiveren jouw extra te verwennen",
+  Tegenprestatie1: "uitvoeren binnen de 30 dagen: verras hem met een seksdate voor hem terwijl hij vastgebonden en geblinddoekt is kijk als hij dit merkt", 
+  Tegenprestatie2: "Cock cage na het spel tot hij jouw 3 dagen na elkaar heeft laten klaarkomen. (hij moet zelf ontdekken wat hij moet doen om los te mogen)" },
+  { tekst: "neem je vuilste schoenen of laarzen Dwing hem je deze te poetsen met zijn tong terwijl jij deze aan hebt", 
+  type: "geen",
+  info: "Extreme boot worship.",
+  Tegenprestatie1: "uitvoeren binnen de 30 dagen: verras hem met een seksdate voor hem terwijl hij vastgebonden en geblinddoekt is kijk als hij dit merkt", 
+  Tegenprestatie2: "uitvoeren binnen de 30 dagen: verras hem met een seksdate voor jouw terwijl hij vastgebonden en geblinddoekt is naast jullie in bed kijk als hij dit merkt" },
+
+  { tekst: "stuur je partner komende 30 dagen elke dag een opdracht waarin je partner een vernederende foto moet nemen.<br>BV. <br>--ga onderweg naar huis naar een bos waar je moet een foto van je zelf nemen met enkel de dames onderbroek aan die je nu aan hebt<br>neem een foto naakt geknield ik wil deze ontvangen voor je vertrekt van u werk.<br>Ga naar een photobooth en neem foto's van je kuisheidskooi en dames onderbroek neem een foto hiervan terwijl de foto's nog in de despencer zitten", 
+  type: "geen",
+  info: "Daily photo humiliation.",
+  Tegenprestatie1: "Stuur naar 3 mannelijke vrienden: 'Random vraag: wat zou je ervan vinden om seks te hebben met mij terwijl mijn vriend vastgebonden toekijkt?' stuur je partner printscreen met hun reactie", 
+  Tegenprestatie2: "Maak een datingprofiel voor uw partner als homo jij beheert die in zijn naam. Nodig een man terwijl je partner vastgebonden is laat hem bij je partner hij mag doen wat hij wilt met je partner terwijl jij dit filmt." },
+
+  { tekst: "Gebruik naaldwiel of pinwheel over zijn pik en ballen terwijl hij vastgebonden is.", 
+  type: "geen",
+  info: "Intense sensatie pijn.",
+  Tegenprestatie1: "was je partner door met een staalwol gedurende 5 minuten te schuren over zijn volledige lichaam.", 
+  Tegenprestatie2: "De volgende keer dat jullie gaan zwemmen, moet je partner een butplug dragen." },
+
+  { tekst: "Geef hem 10 minuten facefuck met een dildo.", 
+  type: "geen",link: "https://femdomhd.org/wp-content/uploads/2022/03/dirtlad198c.jpg",
+  info: "ga op zijn gezicht zitten speel met jezelf met een dildo of vibrator.",
+  Tegenprestatie1: "doe u partner tepelklemmen aan trek hier aan zeg hem 'je kan me niet kan geven wat ik nodig heb met die kleine penis van je. Ik zal een 2de man zoeken die ik zen penis kan voelen. Wat vind je hiervan.'blijf doortrekken tot hij je toestemming geeft en voorsteld iemand voor je te vinden", 
+  Tegenprestatie2: "Maak een account op OnlyFans. Je mag pas stoppen als je 900€ verdiend hebt in 1 week." },
+                { 
+                    tekst: "Zoek en koop een kanten (minislip) (koop 2 stuks; jij trakteert).<br>Kies een vaste dag waarop jullie beiden deze onderbroek moeten dragen (de persoon die dit vergeet moet de partner masseren).",
+                    info: "info", link: "https://euqs.shein.com/pdsearch/mini%20underwaer%20woman/?ici=s1`EditSearch`mini%20underwaer%20woman`_fb`d0`PageSearchResult&pre_search_content=minislip%20woman&search_source=1&search_type=all&source=search&src_identifier=st%3D2%60sc%3Dmini%20underwaer%20woman%60sr%3D0%60ps%3D1&src_identifier_pre_search=%22%22&src_module=search&src_tab_page_id=page_search1780081216246",
+                    Tegenprestatie1: "De volgende keer dat jullie gaan zwemmen, moet je partner een kuisheidskooi dragen.", 
+                    Tegenprestatie2: "Stuur naar de laatste 3 mannen die je een bericht hebt gestuurd op Messenger (geen familie en geen collega's): 'Random vraag: wat zou je ervan vinden om seks te hebben met mij terwijl mijn vriend vastgebonden toekijkt?'" 
+                },
+                
+                { tekst: "Maak een account op online sekswerk platform. Je mag pas stoppen als je 1000€ verdiend hebt in 1 week.", 
+  type: "geen",
+  info: "Extreme verbale vernedering terwijl hij vastgebonden is.",
+  Tegenprestatie1: "Plan een seksdate met een swingerskoppel (zonder dat uw partner hiervan weet).<br>Laat uw partner een kuisheidskooi dragen. (vergeet zogezegt de sletel op je werk of ergens anders)", 
+  Tegenprestatie2: "50 slagen + tepelklemmen + spitting." },
+  { tekst: "Kaarsvet + ijs afwisselen op zijn genitaliën.", 
+  type: "geen",
+  info: "Temperatuur play extreem.",
+  Tegenprestatie1: "Uw partner moet morgen aandoen wat jij nu draagt.", 
+  Tegenprestatie2: "uit te voeren binnen de 30 dagen: regel een chasity cuckold date met een andere man of koppel" },
+
+            { tekst: "Maak een account op deze apps: FET, FEELD, Fetlife. <br>Stuur hierop berichten naar mannen. Als ze antwoorden, stuur je terug: 'Ben je nu vrij? En welk standje zou jij met me willen doen terwijl mijn man toekijkt?' Doe dit tot er X mannen hierop reageren.", 
+            type: "tijd", count: 4, unit: "minuut",
+            info: "Geniet van de aandacht van andere mannen; hun speelse ideeën kunnen jullie alleen maar laten genieten.", 
+            Tegenprestatie1: "Zet uw handen op de balzak van uw partner gedurende 3 minuten. Knijp en trek pompend aan zijn balzak.", 
+            Tegenprestatie2: "Neem een scherp keukenmes. Wrijf met de punt van het mes over het lichaam van uw partner. Laat uw partner geloven dat jij in de penis of balzak zal snijden." },
+{ tekst: "Steek een buttplug in hem en speel 15 minutenen door de plug te bewegen.", 
+  type: "geen",
+  info: "Anale training + immobilisatie.",
+  Tegenprestatie1: "Kies tussen alle onderbroeken van uw partner 4 onderbroeken. Maak de rest kapot en smijt deze weg (uw partner zal zijn onderbroeken tactisch moeten gebruiken).", 
+  Tegenprestatie2: "Sla 60 keer met je blote hand in de balzak van uw partner." },
+  { tekst: "uit te voeren binnen de 7 dagen: Ga shoppen online voor lingerie terwijl toekijkt en vertel hem dat je deze lengerie gaat aanhebben bij de seksdate met ...(noem een man dat jullie beiden kennen).", 
+  type: "geen",
+  info: "Cuckold voorbereiding + tease.",
+  Tegenprestatie1: "Uit te voeren binnen de 7 dagen: Ga shoppen in een winkel voor lingerie terwijl toekijkt en vertel hem dat je deze lengerie gaat aanhebben bij de seksdate met laat hem foto sturen naar die man om te vragen wat hij hiervan vind.", 
+  Tegenprestatie2: "Laat uw partner in een French maid-jurkje het huishouden doen bij een vriend(in) van jou, terwijl jullie gezelschapsspellen spelen." },
+  { tekst: "Sla zijn ballen en pik X keer met je hand of een lepel ", 
+  type: "tijd",count:32,unit: "minuut",
+  info: "Ballbusting sessie.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. slaag met een zweep op de poep en de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer", 
+  Tegenprestatie2: "bijt 10 minuten in de tepels van je partner van uw partner." },
+            
+            { tekst: "Nodig 1 voor 1 een man uit om nu naar jullie slaapkamer te komen, tot er 1 man toezegt.<br>Maak de man die komt duidelijk dat hij uw partner geen kans mag geven om dit tegen te houden.<br><br>Speel door tot deze man hier is.", 
+            type: "geen", 
+            info: "Voor een man is het toekijken hoe zijn partner bevredigd wordt door een andere man extreem vernederend. Bij 83% van de koppels zorgt dit voor een betere relatie.", 
+            Tegenprestatie1: "Kies tussen alle onderbroeken van uw partner 4 onderbroeken. Maak de rest kapot en smijt deze weg (uw partner zal zijn onderbroeken tactisch moeten gebruiken).", 
+            Tegenprestatie2: "Stuur naar 3 mannelijke vrienden: 'Random vraag: wat zou je ervan vinden om seks te hebben met mij terwijl mijn vriend vastgebonden toekijkt?'" },
+
+
+
+            { tekst: "Neem X foto's van jullie beiden zoals jullie nu zijn.", 
+            type: "tijd", 
+            min: 3, 
+            max: 30, 
+            count:6,
+            info: "",link: "https://i.redd.it/drpityizbzr91.jpg" ,
+            Tegenprestatie1: "Plan een seksdate met een swingerskoppel (zonder dat uw partner hiervan weet).<br>Laat uw partner een kuisheidskooi dragen. (Deze blijft aan tijdens deze seksdate.)", 
+            Tegenprestatie2: "Deel de laatst genomen foto met de laatste 3 mannen met wie je gestuurd hebt via WhatsApp (geen familie en geen collega's)." },
+
+
+
+            
+            { tekst: "Maak een account op Tango.me. Ga gedurende minimaal X minuten live.<br><br>(Hiervoor mag je kleren aandoen en een masker om je comfortabeler te voelen).", 
+            type: "tijd", 
+            min: 3, 
+            max: 100, 
+            count:12,
+            info: "Voor het geld moet je het niet doen (gemiddeld 2$ per minuut), maar het delen van jullie seksuele handelingen kan een opwinding geven.",link: "https://tango.me/" ,
+            Tegenprestatie1: "Maak een account op OnlyFans. Je mag pas stoppen als je 900€ verdiend hebt in 1 week.", 
+            Tegenprestatie2: "Plan een seksdate met een swingerskoppel (zonder dat uw partner hiervan weet).<br>Laat uw partner een kuisheidskooi dragen. (Deze blijft aan tijdens deze seksdate.)" },
+            
+            
+            { tekst: "Doe uw kleren op een erotische manier uit.", 
+            type: "tijd", 
+            min: 1, 
+            max: 100, 
+            count:7,
+            info: "",link: "https://www.youtube.com/watch?v=jtJsNv3E7I8" ,
+            Tegenprestatie1: "Uw partner moet morgen aandoen wat jij nu draagt.", 
+            Tegenprestatie2: "Je laat hem 6 minuten je anus likken (rimjob)" },
+
+            { tekst: "Dwing hem te smeken om je poes te mogen likken en lach hem uit terwijl hij vastgebonden ligt.", 
+  type: "geen",
+  info: "Smeek-sessie + denial.",
+  Tegenprestatie1: "Facesitting tot hij trilt.", 
+  Tegenprestatie2: "Tepelklemmen + 60 slagen." },
+  { tekst: "Spuit slagroom of honing op je voeten en dwing hem het op te likken.", 
+  type: "geen",
+  info: "Body worship forced.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. slaag met een zweep op de poep en de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer", 
+  Tegenprestatie2: "Sla 50 keer met je blote hand in de balzak van uw partner." },
+
+            { tekst: "Vertel hem dat je binnen 30 dagen een echte man gaat neuken en maak hem daarbij klaar. (speel erna door)", 
+  type: "geen",
+  info: "Intense cuckold fantasie + denial.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. slaag met een zweep op de poep en de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer", 
+  Tegenprestatie2: "Ballbusting + 7 dagen geen klaarkomen." },
+            
+            { tekst: "Blinddoek uw partner tot het spel zegt dat de blinddoek af mag.<br><br>(Indien een seksdate komt, mag de blinddoek af op het moment dat jullie beiden naakt zijn).", 
+            type: "geen", 
+            info: "Wanneer het zicht wordt weggenomen, valt de visuele controle weg, wat een overweldigend gevoel van kwetsbaarheid en overgave creëert. Dit dwingt de man om volledig te vertrouwen op zijn andere zintuigen: tast, gehoor en anticipatie. Elke aanraking, elke zachte fluistering of het geluid van naderende beweging wordt exponentieel versterkt.", 
+            Tegenprestatie1: "Ga op het gezicht zitten van uw partner met uw voeten op de balzak van uw partner gedurende 15 minuten.", 
+            Tegenprestatie2: "Sla 50 keer met je blote hand in de balzak van uw partner." },
+            
+            
+            { tekst: "Voer uit binnen 30 dagen: doe uw partner een kuisheidskooi aan. Hij moet zoeken naar een man met wie jij seks wilt hebben voor zijn ogen. Verder spreek jij af met deze man dat uw partner tijdens de seksdate een French maid-kostuum moet dragen (kuisheidskooi mag enkel uit als deze man je heeft laten klaarkomen).", 
+            type: "tijd", 
+            min: 1, 
+            max: 100, 
+            count:3,
+            info: "Indien het de eerste keer is, keten uw partner en zorg dat hij niets kan zeggen, of negeer de vraag om te stoppen (in het begin twijfelt de man altijd en zal hij vragen om te stoppen; achteraf zal hij extra verliefd zijn).",link: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4a2e6e46-719d-447e-9f54-0c07e9404134/dlqupy3-4e27bfff-ef2a-4bc3-bf6e-4b37ad4f5987.jpg/v1/fit/w_828,h_1242,q_70,strp/please_sir____by_fussysissy_dlqupy3-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTkyMCIsInBhdGgiOiIvZi80YTJlNmU0Ni03MTlkLTQ0N2UtOWY1NC0wYzA3ZTk0MDQxMzQvZGxxdXB5My00ZTI3YmZmZi1lZjJhLTRiYzMtYmY2ZS00YjM3YWQ0ZjU5ODcuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.eAQqfOwJ_8htLXxwFhX8ow2Ijh2PodV_oszV8szmfDA" ,
+            Tegenprestatie1: "Voer uit binnen 30 dagen: laat uw partner naakt geknield zitten met de handen geketend aan elkaar. Leg de sleutel op de grond op een plek waar hij hem ziet liggen. Zeg uw partner dat hij de sleutel mag nemen als je toestemming geeft. Blinddoek hem en leg objecten zoals knikkers of legoblokjes tussen hem en de sleutel. Geef hem 5 minuten; indien hij de sleutel niet binnen 5 minuten heeft, verplaats de sleutel (nu mag hij niet weten waar) en moet hij zoeken tot hij deze sleutel heeft.", 
+            Tegenprestatie2: "Pijp uw partner; stop voordat uw partner klaarkomt."
+            },
+
+            { tekst: "Bij elke volgende opdracht geef je op een random moment een slag in de balzak (1 slag per opdracht en 2 slagen per straf). Wissel af tussen zweep en hand.<br><br>Dit geldt voor elke opdracht en straf tot het einde van het spel. <br>(Indien het niet mogelijk is door de opdracht, spaar je deze op voor een volgende opdracht).", 
+            type: "geen", 
+            info: "info.",link: "" ,
+            Tegenprestatie1: "Je voert de opdracht dubbel uit (bij elke volgende opdracht geef je op een random moment een slag in de balzak: 2 slagen per opdracht en 4 slagen per straf). Wissel af tussen zweep en hand.<br><br>Dit geldt voor elke opdracht en straf tot het einde van het spel. <br>(Indien het niet mogelijk is door de opdracht, spaar je deze op voor een volgende opdracht).", 
+            Tegenprestatie2: "breng tabasco vaginaal binnen. laat het branderig gevoel voor 5 min voor je dit probeert weg te krijgen" },
+            { tekst: "Bind zijn pik en ballen strak af met een touw en laat hem 10 minuten zo liggen.", 
+  type: "geen",
+  info: "Cock & ball bondage.",
+  Tegenprestatie1: "Ballbusting tvoor 10 minuten", 
+  Tegenprestatie2: "Laat je partner partner op zijn buik liggen. slaag met een je hand op de poep van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer" },
+  { tekst: "Gebruik tepelklemmen, ball stretcher en buttplug tegelijk terwijl.", 
+  type: "geen",
+  info: "Meerdere pijnpunten tegelijk.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. slaag met een zweep op de de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer", 
+  Tegenprestatie2: "Uit te voeren binnen de 7 dagen: Ga shoppen in een winkel voor lingerie terwijl toekijkt met u partner nemen en sturen naar 5 mannen telkens in een groepsgesprek met jouw erbij." },
+
+  { tekst: "Laat hem vastgebonden liggen en masturbeer jezelf klaar op zijn gezicht voor 3 minuten", 
+  type: "geen",
+  info: "Squirting / orgasme in zijn gezicht.",
+  Tegenprestatie1: "Pijp je partner tot hij bijna klaarkomt", 
+  Tegenprestatie2: "Laat je partner partner op zijn buik liggen. slaag met een metalen ketting op de poep en de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer" },
+            
+            
+                { 
+                    tekst: "Zoek en koop een kanten high-rise slip (koop 2 stuks; jij trakteert).<br>Kies een vaste dag waarop jullie beiden deze onderbroek moeten dragen (de persoon die dit vergeet moet de partner masseren).",
+                    info: "info", link: "https://euqs.shein.com/HautHeat-1pc-Women-Floral-Lace-Patchwork-Underwear-Briefs-p-43733865.html?mallCode=1",
+                    Tegenprestatie1: "Vernietig alle onderbroeken van uw partner; vanaf nu moet hij jouw gebruikte ondergoed dragen.", 
+                    Tegenprestatie2: "Deel de laatst genomen foto met de laatste 3 mannen met wie je gestuurd hebt via WhatsApp (geen familie en geen collega's)." 
+                },
+
+            { tekst: "Kietel uw partner gedurende minimaal X seconden", 
+            type: "tijd", count: 156, unit: "seconden",
+            info: "Wanneer het zicht wordt weggenomen, valt de visuele controle weg, wat een overweldigend gevoel van kwetsbaarheid en overgave creëert. Dit dwingt de man om volledig te vertrouwen op zijn andere zintuigen: tast, gehoor en anticipatie. Elke aanraking, elke zachte fluistering of het geluid van naderende beweging wordt exponentieel versterkt.", 
+            Tegenprestatie1: "Ga op het gezicht van uw partner zitten; probeer te zorgen dat hij niet kan ademen en zet uw voeten op de balzak van uw partner gedurende 15 minuten. Elke keer dat je hem voelt ademen, geef je hem een stoot met je enkel in zijn balzak, zo hard als je kunt (in deze positie kun je niet heel hard schoppen).", 
+            Tegenprestatie2: "Sla 50 keer met je blote hand in de balzak van uw partner." },
+            { tekst: "Steek ijsblokjes in zijn anus terwijl hij vastgebonden is.", 
+  type: "geen",
+  info: "IJs marteling anaal.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. steek een dildo anaal in je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer", 
+  Tegenprestatie2: "Pijp je partner tot hij klaarkomt in je mond. geef dit aan je partner door" },
+
+            { tekst: "Neem een zeer scherp mes. Snijd op zijn voet het woord 'SLAAF' en dreig zijn penis eraf te snijden. Snijd zijn onderbroek uit.", 
+            type: "tijd", count: 156, unit: "seconden",
+            info: "Wanneer het zicht wordt weggenomen, valt de visuele controle weg, wat een overweldigend gevoel van kwetsbaarheid en overgave creëert. Dit dwingt de man om volledig te vertrouwen op zijn andere zintuigen: tast, gehoor en anticipatie. Elke aanraking, elke zachte fluistering of het geluid van naderende beweging wordt exponentieel versterkt.", 
+            Tegenprestatie1: "Knip zijn onderbroek kapot. Neem een naald, maak deze steriel en prik door de tepel. Laat deze naald zitten voor 3 beurten of verwissel deze met een piercing of oorring.", 
+            Tegenprestatie2: "Doe zijn onderbroek uit. Zoek in huis alles wat knijpt en hang dit aan zijn tepels en balzak. Laat het 60 seconden hangen en wissel dan af.<br><br>Papierklemmen, pincet, lijmklemmen, zuigklemmen, springklemmen, wasknijpers, klemtang, muizenval, kledinghanger..." },
+         
+            { tekst: "Ga naar de wc en plas in een potje. Laat uw partner hiervan proeven en gokken wat dit is.", 
+            type: "geen", 
+            info: "Urine drinken geeft een onderdanig gevoel en zou volgens sommigen zelfs gezond zijn.",link: "https://www.nieuwsblad.be/binnenland/urine-drinken-is-goed-voor-de-gezondheid/54154578.html" ,
+            Tegenprestatie1: "Voer uit binnen 30 dagen: ga samen op stap; uw partner mag de rest niet weten.<br><br>Zorg voor twee dezelfde jurkjes, twee dezelfde lingerie-setjes, twee dezelfde nylonkousen, een pruik die lijkt op jouw kapsel en een siliconen crossdress-bovenlichaam.<br><br>Stop bij een openbaar toilet; hier moet hij zich omkleden. Ga samen uit naar een plek waar niet vreemd gereageerd wordt op een crossdresser (carnaval, holebi-café, foute party...).", 
+            Tegenprestatie2: "Neem allerlei huishoudelijke objecten (minimaal 20) die je kunt gebruiken als zweep. Sla 10 keer per object op de billen en 5 keer op de rug van uw partner.<br><br>Ketting, pannenlikker, broeksriem, afwasborstel, pollepel, keukendoek, borstel, ..." },
+        { tekst: "Maak hem klaar en stop 8 keer achter elkaar (extreme edging).", 
+  type: "geen",
+  info: "Edging marteling.",
+  Tegenprestatie1: "Laat je partner partner op zijn buik liggen. slaag met een zweep op de poep en de rug van je partner tot hij het stopwoord zegt. wacht 1 minuut en begin opniet herhaal dit 5 keer.", 
+  Tegenprestatie2: "knijp vanaf nu elke opdracht 1 keer kort in de balzak van je partner bij elke tegenprestatie 1 keer 3 minutern" },
+            { tekst: "Neem een gebruikte onderbroek en steek deze in de mond van uw partner met de vaginale afscheiding op zijn tong; plak het vast met verpakkingstape voor X beurten.", 
+            type: "tijd", 
+            min: 3, 
+            max: 1000, 
+            count:3,
+            info: "Zorg voor een goed gedragen onderbroek waar veel afscheiding op zit.",link: "https://images.community.24baby.nl/image-topics/f90b2cc3-862f-41ca-b4c2-1f9eea993de8/small.jpg?v=63769018994" ,
+            Tegenprestatie1: "Neem een gebruikte kous, steek deze in de mond van uw partner en plak deze vast met verpakkingstape tot het einde van het spel.", 
+            Tegenprestatie2: "Neem een mondgag en steek deze voor de rest van het spel in de mond van uw partner. Sla 30 keer met een zweep op de balzak van uw partner." },
+
+           { tekst: "Laat hem vastgebonden liggen en trap zacht tot stevig op zijn ballen.", 
+  type: "geen",
+  info: "Ballbusting met voet.",
+  Tegenprestatie1: "Maak een account op OnlyFans je mag pas stoppen als je 900€ verdiend hebt op 1 week", 
+  Tegenprestatie2: "Doe hem tepelklemmen aan voor 15 minuten" }, 
+            
+                { 
+                    tekst: "Zoek en koop een kanten lingeriesetje (koop 2 stuks; jij trakteert).<br>Kies een vaste dag waarop jullie beiden deze onderbroek moeten dragen (de persoon die dit vergeet moet de partner masseren).",
+                    info: "info", link: "https://euqs.shein.com/SHEIN-Contrast-Lace-Underwire-Lingerie-Set-p-22068201.html?mallCode=1",
+                    Tegenprestatie1: "Kies 1 dag per week dat jullie beiden een nylon kousenbroek moeten dragen  (de persoon die dit vergeet moet de partner masseren)", 
+                    Tegenprestatie2: "Stuur naar de eerste 3 mannen die online zijn op Messenger (geen familie en geen collega's): 'Random vraag: wat zou je ervan vinden om seks te hebben met mij terwijl mijn vriend vastgebonden toekijkt?'" 
+                },
+            { 
+            tekst: "Extra leefregel.<br>Elke keer dat jullie alleen zijn voor de rest van de avond moet uw partner alle kleding behalve zijn onderbroek uitdoen.", type: "geen", 
+            info: "Hiermee bespaar je als koppel gemiddeld 9 euro aan waskosten en 16 euro aan slijtage van kleding en meubilair per maand.", link: "",
+            Tegenprestatie1: "Voer uit binnen 30 dagen: Bind uw partner in dameskleding vast in de woonkamer (zonder dat hij de rest van de straf kent).<br>Negeer dat hij zo vastgebonden is en zorg ervoor dat er enkele mensen komen.<br>Deze mogen kiezen of ze uw partner aanraken of hem negeren, maar ze mogen hem niet laten klaarkomen.", 
+            Tegenprestatie2: "Jij regelt een trio binnen 30 dagen (uw partner draagt een kuisheidskooi tijdens deze trio)." 
+            },
+
+            { tekst: "Kies uit je 6 laatst genomen foto's er één die uw partner gedurende X dagen moet gebruiken als achtergrond op zijn gsm.", 
+            type: "aantal", 
+            min: 5, 
+            max: 366, 
+            info: "Zorg ervoor dat elke keer dat uw partner zijn gsm gebruikt, hij aan jou denkt.",
+            Tegenprestatie1: "Uw partner kiest een foto uit alle foto's waar jullie samen op staan, genomen maximaal 1 maand geleden. Deze foto moet jij op je achtergrond zetten zodra jij je partner 6 keer hebt laten klaarkomen (vandaag niet meegeteld).", 
+            Tegenprestatie2: "Pijp je partner tot hij klaarkomt in je mond. Kus vervolgens je partner en laat hem zo zijn eigen sperma inslikken." },
+
+            
+            { tekst: "Ga op het gezicht van uw partner zitten met je billen op zijn mond en neus; zorg ervoor dat uw partner gedurende X seconden geen adem kan krijgen. Herhaal dit 4 keer (indien langer dan 150 seconden: spreek een stopteken af).", 
+            type: "tijd", 
+            min: 3, 
+            max: 1000, 
+            count:133,
+            info: "info.",link: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/a6676e63-36f8-4f9f-aa7f-bfdb65e0e645/dlnv189-5267049e-eb59-4798-ac35-09af79549001.jpg/v1/fill/w_894,h_894,q_70,strp/jet_is_facesitting_by_addisonsreed_dlnv189-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwMCIsInBhdGgiOiIvZi8hNjY3NmU2My0zNmY4LTRmOWYtYWE3Zi1iZmRiNjVlMGU2NDUvZGxudjE4OS01MjY3MDQ5ZS1lYjU5LTQ3OTgtYWMzNS0wOWFmNzk1NDkwMDEuanBnIiwid2lkdGgiOiI8PTYwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.dwG4Bb8ZqHaR2sOBVYInEQxNeFsu78XmAo7X6eExkgw" ,
+            Tegenprestatie1: "Neem een bot koksmes. Wrijf met de punt van het mes over het lichaam van uw partner. Laat uw partner geloven dat jij in de penis of balzak zal snijden.", 
+            Tegenprestatie2: "Laat uw partner in een French maid-jurkje het huishouden doen bij een vriend(in) van jou, terwijl jullie gezelschapsspellen spelen." },
+
+            { 
+            tekst: "Extra leefregels.<br><br>- Je partner mag niet jaloers reageren.<br>- Jij mag de handelingen doen die jij wenst met wie je wenst; je moet enkel je partner hiervan op de hoogte stellen op het moment dat je erotisch contact hebt.", type: "geen", 
+            info: "Hiermee bespaar je als koppel gemiddeld 9 euro aan waskosten en 16 euro aan slijtage van kleding en meubilair per maand.", link: "",
+            Tegenprestatie1: "Voer uit binnen 30 dagen: bind uw partner in dameskleding vast in de woonkamer (zonder dat hij de rest van de straf kent).<br>Negeer dat hij zo vastgebonden is en zorg ervoor dat er enkele mensen langskomen.<br>Deze mogen kiezen of ze uw partner aanraken of hem negeren, maar ze mogen hem niet laten klaarkomen.", 
+            Tegenprestatie2: "Voer uit binnen 30 dagen: ga naar de duinen of een bos; laat je partner hier dameskleding dragen en wandel rond tot hij 30 minuten zonder schaamte heeft gewandeld." 
+            },
+
+            { tekst: "Maak een account op Tango.me. Ga gedurende minimaal X minuten live.<br><br>(Hiervoor mag je kleren aandoen en een masker om je comfortabeler te voelen).", 
+            type: "tijd", 
+            min: 3, 
+            max: 100, 
+            count:12,
+            info: "Voor het geld moet je het niet doen (gemiddeld 2$ per minuut), maar het delen van jullie seksuele handelingen kan een opwinding geven.",link: "https://tango.me/" ,
+            Tegenprestatie1: "Maak een account op OnlyFans je mag pas stoppen als je 900€ verdiend hebt op 1 week", 
+            Tegenprestatie2: "Plan een seksdate met een swingerskoppel (zonder dat uw partner hiervan weet).<br>Laat uw partner een kuisheidskooi dragen. (Deze blijft aan tijdens deze seksdate.)" },
+
+            { tekst: "Kies uit alle herenonderbroeken van uw partner X onderbroeken. Maak de rest kapot en smijt deze weg.<br>Als uw partner geen ondergoed heeft, mag hij kiezen tussen het dragen van gedragen ondergoed van jou of ondergoed dat jij niet graag draagt (schoon), of helemaal geen ondergoed. Elke keer dat je kunt zien dat hij een damesonderbroek draagt, neem een foto en stuur hem deze.", 
+            type: "tijd", 
+            min: 1, 
+            max: 100, 
+            count:7,
+            info: "Uw partner moet tactisch kiezen wanneer hij welke onderbroek draagt. De foto's maken het extra vernederend.",link: "https://pbs.twimg.com/media/EpD7EuCXcAMqLXP.jpg" ,
+            Tegenprestatie1: "Kies uit alle onderbroeken van uw partner 4 onderbroeken. Maak de rest kapot en smijt deze weg (uw partner zal zijn onderbroeken tactisch moeten gebruiken).", 
+            Tegenprestatie2: "Voer uit binnen 30 dagen: laat je partner dameslingerie dragen met een kuisheidskooi eronder.<br>Ga samen kleding winkelen; laat hem kleding passen zodat hij in zijn onderbroek in de kleedkamer moet staan. Laat hem in 4 verschillende winkels telkens 3 jurkjes passen die jij haalt terwijl hij in het paskotje wacht" },
+            
+            { tekst: "Bind de balzak van uw partner af en geef X slagen met een zweep op de balzak.", 
+            type: "tijd", 
+            min: 20, 
+            max: 100, 
+            count:25,
+            info: "info.",link: "https://st1.nosofiles.com/4/9/7/1/8/output_67ba73a3-8e04-449b-a33e-2084dcf81794_poster.jpg" ,
+            Tegenprestatie1: "Lik de balzak van uw partner gedurende 5 minuten", 
+            Tegenprestatie2: "Voer uit binnen 30 dagen: Laat uw partner een kousenbroek dragen ga samen winkelen voor schoenen laat hem in elke schoenen winkel minimaal 3 schoenen passen. laat hem in een winkel waar dit kan 2 dames schoenen passen (en kopen)" },
+            
+
+            
+                        
+            { tekst: "Breng de penis van uw partner vaginaal in. Eenmaal de penis volledig binnen is, beweeg niet gedurende X minuten; het is de bedoeling dat uw partner niet klaarkomt.<br>Indien hij klaarkomt, speel door na 5 minuten pauze (hij blijft vastgebonden).", 
+            type: "tijd", 
+            count:4,
+            info: "info.",link: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_f8wknLHaP_c1aPXjCbW4ZV3eF5lD2jSdw&s" ,
+            Tegenprestatie1: "Neem een onderbroek of stuk stof, ga naar de wc en doe je behoefte; neem vervolgens deze onderbroek en gebruik dit als mondgag voor uw partner.", 
+            Tegenprestatie2: "Uit te voeren binnen de 7 dagen: Ga shoppen in een winkel voor lingerie terwijl je partner mee is laat hem foto sturen naar 5 mannen met de tekst 'mag ik toekijken als jullie seks hebben' telkens in een groepsgesprek met jouw erbij." },
+            
+            { tekst: "Ga samen hardlopen/wandelen op een openbare plaats. Neem een hondenriem mee; uw partner moet X meter aan de hondenriem wandelen.", 
+            type: "tijd", 
+            min: 1, 
+            max: 1000, 
+            count:250,
+            info: "",link: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/05eff77b-5dd2-4b88-89b7-5394922cba4d/d58nte5-268bc33b-16fd-4025-999c-e2d996d16b4f.jpg/v1/fill/w_900,h_661,q_75,strp/call_me_mistress_2_by_fancydressqueen_d58nte5-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjYxIiwicGF0aCI6Ii9mLzA1ZWZmNzdiLTVkZDItNGI4OC04OWI3LTUzOTQ5MjJjYmE0ZC9kNThudGU1LTI2OGJjMzNiLTE2ZmQtNDAyNS05OTljLWUyZDk5NmQxNmI0Zi5qcGciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.tgvGiCW8blzi0Ly1rojM8pX1c-A3xDwQoGC7Rq0scjY" ,
+            Tegenprestatie1: "Jij moet elke dag dat jullie samen gaan slapen, uw partner laten klaarkomen.", 
+            Tegenprestatie2: "Ga op uw partner staan gedurende X seconden."},
+            
+            { tekst: "Stopwoord-challenge: zeg tegen uw partner 'vanaf nu is het verboden om het stopwoord te gebruiken; per overtreding moet je me met handboeien en tepelklemmen 5 minuten masseren'. Probeer de komende X minuten uw partner zo vaak mogelijk het stopwoord te laten zeggen.<br>Per reden geldt maximaal 2 keer het stopwoord.", 
+            type: "tijd", 
+            count:19,
+            info: "In het BDSM-spel wordt het stopwoord vaak te snel gebruikt. Door geregeld deze challenge te doen, zorg je ervoor dat de grens verlegd wordt.",
+            Tegenprestatie1: "Verander het stopwoord: (je zegt enkel dat er een nieuw stopwoord is; hij moet zelf uitvinden wat dit is).", 
+            Tegenprestatie2: "Uw partner mag gedomineerd worden door een andere dame en mag deze dame 1 keer per maand bezoeken (stel uw partner hiervan op de hoogte)." },
+
+            { tekst: "Bevestig de koude omhelzing van de klemmen aan de tepels van uw geliefde. Plaats het ijsblok in hun mond, een stille belofte van smeltende controle. De uitdaging: De klemmen blijven zitten totdat het laatste, bevroren moment van het ijs is verdwenen. Hun geduld, uw vastberadenheid. Durf de spanning te dragen.", 
+            type: "geen", 
+            info: "De combinatie van scherp en koud kan extreem opwindend zijn voor een man.",
+            Tegenprestatie1: "Uw partner mag gedomineerd worden door een andere dame en mag deze dame 1 keer per maand bezoeken (stel uw partner hiervan op de hoogte).", 
+            Tegenprestatie2: "Neem alle wasknijpers die je kunt vinden en breng deze bij uw partner aan." },
+
+            { tekst: "Doe de blinddoek van uw partner af.", 
+            type: "geen", 
+            info: "Zorg ervoor dat uw partner u weer kan zien.",
+            Tegenprestatie1: "Lik uw partner over zijn volledige lichaam (voeten, penis, oren, oksels, tepels...).", 
+            Tegenprestatie2: "Neem alle wasknijpers die je kunt vinden en breng deze bij uw partner aan." },
+
+            { tekst: "Doe uw partner tepelklemmen aan voor X beurten.", 
+            type: "tijd", count:3,
+            info: "Zorg ervoor dat uw partner niet klaarkomt.",
+            Tegenprestatie1: "Neem alle wasknijpers die je kunt vinden en breng deze bij uw partner aan.", 
+            Tegenprestatie2: "Pijp uw partner tot hij klaarkomt in je mond en slik dit door." },
+
+            { tekst: "Leg uw voeten rond de penis van uw partner voor X beurten.", 
+            type: "tijd", count:1,
+            info: "De aanwezigheid van uw voeten zal al genoeg zijn om uw partner opgewonden te maken.", link: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/44dae941-b226-4b10-839d-f82188ce0a7c/dl6phlm-b85b9f90-7ae0-42b5-bd99-5f56f3629270.jpg/v1/fit/w_784,h_1168,q_70,strp/hours_of_edging_by_submissionfuntasies_dl6phlm-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTE2OCIsInBhdGgiOiIvZi80NGRhZTk0MS1iMjI2LTRiMTAtODM5ZC1mODIxODhjZTBhN2MvZGw2cGhsbS1iODViOWY5MC03YWUwLTQyYjUtYmQ5OS01ZjU2ZjM2MjkyNzAuanBnIiwid2lkdGgiOiI8PTc4NCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.x_KrdUqWUgm7D2wH4N_maajoCD8ba-9_lEfk8A66wWk",
+            Tegenprestatie1: "Uw partner mag gedomineerd worden door een andere dame en mag deze dame 1 keer per maand bezoeken (stel uw partner hiervan op de hoogte).", 
+            Tegenprestatie2: "Maak een datingprofiel voor uw partner als homo. Nodig een man uit die hem verplicht seks met hem te hebben." },
+
+            { tekst: "Masturbeer jezelf tot jij je hoogtepunt bereikt.", 
+            type: "tijd", count:2,
+            info: "Zorg ervoor dat uw partner u weer kan zien.",
+            Tegenprestatie1: "Ga bovenop je partner zitten en neuk hem gedurende precies 30 minuten (niet korter en niet langer).", 
+            Tegenprestatie2: "Doe uw partner een voorbinddildo aan voor de rest van het spel. Zorg dat je tegen het einde van het spel minimaal 2 keer de voorbinddildo gebruikt hebt tot jij bent klaargekomen." },
+
+            { tekst: "Doe uw partner een kuisheidskooi aan; deze blijft om gedurende 5 dagen. Elke keer dat uw partner hierover spreekt, komt er een dag bij (hij mag niet weten hoe lang hij erin moet en waarom het verlengd wordt).", 
+            type: "tijd", count:2,
+            info: "Zorg ervoor dat uw partner u weer kan zien.",
+            Tegenprestatie1: "Uw partner mag seks hebben met een andere dame als hij jou een foto stuurt als ze bezig zijn (stel uw partner hiervan op de hoogte).", 
+            Tegenprestatie2: "Voer uit binnen 30 dagen: zoek op Fetlife een persoon naar wie jullie op een vaste dag per maand toe gaan; deze persoon mag uw partner gebruiken als slaaf (geen beperkingen)." },
+
+        ];
+
+        const fase4FinaleLijst = [
+            
+            { tekst: "Zeg tegen uw partner: 'Slaap lekker, schatje. Als je braaf slaapt, maak ik je morgenochtend los, anders...' Indien uw partner probeert te bewegen, sla hem dan in de balzak en zeg: 'Lig stil' (indien jij dit meer dan 3 keer moet herhalen, schop hem dan uit bed).", 
+            type: "geen",
+            info: "Indien je hem moet zeggen 'lig stil', dan slaapt hij niet braaf.",
+            Tegenprestatie1: "Blinddoek uw partner, bind zijn handen op zijn rug en hang hem aan de hondenriem. Neem hem mee naar jullie tuinhuis of bergplek. Bind hem hier vast met kettingen en hangsloten. Hang wasknijpers overal waar je kunt. Zeg hem: 'Je hebt 5 minuten om deze uit te doen'. Indien het niet lukt, zeg je: 'Je hebt 5 minuten om los te geraken'. Na deze 5 minuten hang je de wasknijpers die hij eraf heeft gehaald terug aan hem en zeg je: 'Omdat het mislukt is, moet je zo slapen'.", 
+            Tegenprestatie2: "Nieuwe leefregel: op een dag naar keuze per week sluit jij je partner op in een kooi om te slapen. Eén keer per maand laat je je partner hierin voor 24 uur plus de tweede nacht." }
+            
+            ];
+
+        const defaultTegenprestaties = [
+            "Fluister 'Je bent mijn alles'.",
+            "Doe een verleidingsdansje.",
+            "Kus het voorhoofd.",
+            "Maak morgen het ontbijt."
+        ];
+
+        const beloningenLijst = [
+            "Ontbijt op bed in het weekend.",
+            "Een avond zonder telefoons.",
+            "Een massage van 30 minuten.",
+            "Samen een romantische film kijken.",
+            "Een nachtelijke wandeling.",
+            "Favoriete gerecht koken."
+        ];
+
+        /*******************************************************
+         * LOGICA
+         *******************************************************/
+
+        let players = [];
+        let gameState = { phase: 0, turnInPhase: 0, currentTask: null, activePlayerIdx: 0 };
+
+        // DOM Elementen
+        const elStartScreen = document.getElementById('start-screen');
+        const elGameScreen = document.getElementById('game-screen');
+        const elChatArea = document.getElementById('chat-area');
+        const elBtnsTask = document.getElementById('btns-task');
+        const elBtnsPenalty = document.getElementById('btns-penalty');
+        const elBtnsReward = document.getElementById('btns-reward');
+        const elBtnsNext = document.getElementById('btns-next');
+        const modal = document.getElementById('info-modal');
+
+        // Helpers
+        function formatName(name) {
+            if (!name) return "";
+            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+        }
+
+        function restartGame() {
+            // UI Switch
+            elGameScreen.classList.add('hidden');
+            elStartScreen.classList.remove('hidden');
+            
+            // Trigger animatie opnieuw voor fris effect
+            elStartScreen.classList.remove('fade-in');
+            void elStartScreen.offsetWidth; // trigger reflow
+            elStartScreen.classList.add('fade-in');
+
+            // Reset interne state
+            gameState = { phase: 0, turnInPhase: 0, currentTask: null, activePlayerIdx: 0, deferredTasks: [] };
+            
+            // UI elements schoonmaken
+            elChatArea.innerHTML = '';
+            document.getElementById('reward-list-container').innerHTML = '';
+            resetActionButtons();
+        }
+
+        function startGame() {
+            let p1Name = document.getElementById('p1-name').value.trim() || "Man";
+            let p2Name = document.getElementById('p2-name').value.trim() || "Dame";
+            
+            // Format namen
+            p1Name = formatName(p1Name);
+            p2Name = formatName(p2Name);
+
+            const p1Gender = document.getElementById('p1-gender').value;
+            const p2Gender = document.getElementById('p2-gender').value;
+
+            players = [ { name: p1Name, gender: p1Gender }, { name: p2Name, gender: p2Gender } ];
+
+            elStartScreen.classList.add('hidden');
+            elGameScreen.classList.remove('hidden');
+            startPhase(1);
+        }
+
+        // Toetsenbordnavigatie voor startscherm
+        document.getElementById('p1-name').addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('p2-name').focus();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                startGame();
+            }
+        });
+        document.getElementById('p2-name').addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('p1-name').focus();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                startGame();
+            }
+        });
+        document.getElementById('p1-gender').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                startGame();
+            }
+        });
+        document.getElementById('p2-gender').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                startGame();
+            }
+        });
+
+        function startPhase(phaseNum) {
+            gameState.phase = phaseNum;
+            gameState.turnInPhase = 0;
+            gameState.phaseUsedIndices = [];
+            if (phaseNum === 5) initRewardPhase();
+            else nextTurn();
+        }
+
+        function nextTurn() {
+            resetActionButtons();
+
+            const hardMode = isHardModeTime();
+            let maxTurns = 0;
+
+            if (!hardMode) {
+                // In soft mode we play a set number of rounds from the soft pool
+                maxTurns = 12; 
+            } else {
+                if (gameState.phase === 1) maxTurns = 5; 
+                if (gameState.phase === 2) maxTurns = 10; 
+                if (gameState.phase === 3) maxTurns = fase3DameLijst.length + (gameState.refusedTasks ? gameState.refusedTasks.length : 0); 
+                if (gameState.phase === 4) maxTurns = fase4FinaleLijst.length;
+            }
+
+            if (gameState.turnInPhase >= maxTurns) {
+                if (!hardMode) {
+                    initRewardPhase();
+                    return;
+                }
+                // Only process deferred tasks after Phase 3 or in final phases
+                if (gameState.phase >= 3 && gameState.deferredTasks && gameState.deferredTasks.length > 0) {
+                    const task = gameState.deferredTasks.shift();
+                    gameState.currentTask = task;
+                    gameState.activePlayerIdx = task.playerIdx;
+                    renderTask(task, players[task.playerIdx]);
+                    return;
+                }
+                startPhase(gameState.phase + 1);
+                return;
+            }
+
+            let pIdx = 0;
+            if (!hardMode || gameState.phase <= 2) {
+                pIdx = gameState.turnInPhase % 2; 
+            } else {
+                pIdx = getTargetPlayerForDameRound(gameState.turnInPhase);
+            }
+
+            gameState.activePlayerIdx = pIdx;
+            const player = players[pIdx];
+
+            let task = null;
+            
+            if (!hardMode) {
+                const pool = supersoftPool[player.gender] || supersoftPool['Ander'];
+                if (!gameState.softUsedIndices) gameState.softUsedIndices = [];
+                
+                let availableIndices = pool.map((_, i) => i).filter(i => !gameState.softUsedIndices.includes(i));
+                if (availableIndices.length === 0) {
+                     gameState.softUsedIndices = [];
+                     availableIndices = pool.map((_, i) => i);
+                }
+                
+                const randomIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                gameState.softUsedIndices.push(randomIdx);
+                task = pool[randomIdx];
+            } else {
+                // Phase selection logic
+                if (gameState.phase === 1) {
+                    const pool = fase1Pool[player.gender] || fase1Pool['Ander'];
+                    if (!gameState.phaseUsedIndices) gameState.phaseUsedIndices = [];
+                    
+                    // Exclude already used tasks in Phase 1
+                    let availableIndices = pool.map((_, i) => i).filter(i => !gameState.phaseUsedIndices.includes(i));
+                    
+                    if (availableIndices.length === 0) {
+                         gameState.phaseUsedIndices = [];
+                         availableIndices = pool.map((_, i) => i);
+                    }
+                    
+                    const randomIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                    gameState.phaseUsedIndices.push(randomIdx);
+                    task = pool[randomIdx];
+                } 
+                else if (gameState.phase === 2) {
+                    const list = fase2Lijst[player.gender] || fase2Lijst['Ander'];
+                    let taskIdx = Math.floor(gameState.turnInPhase / 2);
+                    if (taskIdx >= list.length) taskIdx = 0;
+                    task = list[taskIdx];
+                }
+                else if (gameState.phase === 3) {
+                    const fullList = [...fase3DameLijst, ...(gameState.refusedTasks || [])];
+                    task = fullList[gameState.turnInPhase];
+                }
+                else if (gameState.phase === 4) task = fase4FinaleLijst[gameState.turnInPhase];
+            }
+
+            gameState.currentTask = task;
+            renderTask(task, player);
+        }
+
+        function renderTask(task, player) {
+            // Introductie
+            elChatArea.innerHTML = `<p class="intro-text">Nexus Genereert uw uitdaging...</p>`;
+            
+            setTimeout(() => {
+                const intros = [
+                    `<span class="highlight-name">${player.name}</span>`,
+                    `<span class="highlight-name">${player.name}</span>`,
+                    `<span class="highlight-name">${player.name}</span>`
+                ];
+                const intro = intros[Math.floor(Math.random() * intros.length)];
+                
+                let displayTekst = task.tekst;
+                let finalValue = 0;
+
+                if (task.type !== 'geen') {
+                    finalValue = task.count !== undefined ? task.count : Math.floor(Math.random() * (task.max - task.min + 1)) + task.min;
+                    if (displayTekst.includes('X')) {
+                        displayTekst = displayTekst.replace('X', `<span id="slot-machine" class="variable-val">...</span>`);
+                    } else {
+                        displayTekst += ` <br><span id="slot-machine" class="variable-val">...</span>`;
+                    }
+                }
+
+                // Render opdracht met info knop
+                let infoBtnHTML = '';
+                if (task.info) {
+                    // Escape for both template literal AND HTML attribute
+                    const safeInfo = task.info.replace(/`/g, "\\`").replace(/'/g, "&apos;");
+                    const safeLink = (task.link || "").replace(/`/g, "\\`").replace(/'/g, "&apos;");
+                    infoBtnHTML = `<button class="info-btn" onclick="openModal('${safeInfo}', '${safeLink}')">I</button>`;
+                }
+
+                elChatArea.innerHTML = `
+                    <p class="intro-text">${intro}</p>
+                    <p style="font-size: 1.3rem; margin-top: 20px;">
+                        ${displayTekst}
+                        ${infoBtnHTML}
+                    </p>
+                `;
+                elBtnsTask.classList.remove('hidden');
+                // Fix voor Flexbox gap visibility bug in sommige gevallen
+                elBtnsTask.classList.add('flex-visible');
+
+                if (task.type !== 'geen') runSlotMachine(finalValue);
+
+            }, 800);
+        }
+
+        function getTargetPlayerForDameRound(turnIndex) {
+            const p1 = players[0];
+            const p2 = players[1];
+            const isDame = p => p.gender === 'Dame';
+            const isAnder = p => p.gender === 'Ander';
+
+            if (isDame(p1) && isDame(p2)) return turnIndex % 2;
+            if (isDame(p1)) return 0;
+            if (isDame(p2)) return 1;
+            if (isAnder(p1) && isAnder(p2)) return turnIndex % 2;
+            if (isAnder(p1)) return 0;
+            if (isAnder(p2)) return 1;
+            return 1; 
+        }
+
+        function handleTaskCompleted(success) {
+            if (success) {
+                const praise = ["Prachtig", "Passievol", "Verbonden", "Schitterend"];
+                elChatArea.innerHTML = `<p class="fade-in highlight-name" style="font-size:3rem;">${praise[Math.floor(Math.random()*praise.length)]}</p>`;
+                finishTurn();
+            } else {
+                elBtnsTask.classList.add('hidden');
+                elBtnsTask.classList.remove('flex-visible');
+                const task = gameState.currentTask;
+
+                // Add refused tasks to return in Phase 3
+                if (gameState.phase < 3) {
+                    if (!gameState.refusedTasks) gameState.refusedTasks = [];
+                    // Prevent duplicates
+                    if (!gameState.refusedTasks.some(t => t.tekst === task.tekst)) {
+                        gameState.refusedTasks.push(task);
+                    }
+                }
+
+                const pen1 = task.Tegenprestatie1 || getRandomDefaultPenalty();
+                const pen2 = task.Tegenprestatie2 || getRandomDefaultPenalty();
+
+                document.getElementById('pen-text-1').innerText = pen1;
+                document.getElementById('pen-text-2').innerText = pen2;
+
+                elChatArea.innerHTML = `<p style="color:var(--primary-red)">Je hebt de vorige opdracht geweigerd. Hiervoor moet je een prijs betalen.<br><span class="highlight-name" style="font-size:1.8rem">${players[gameState.activePlayerIdx].name}</span>, kies een van de onderstaande tegenprestaties.</p>`;
+                elBtnsPenalty.classList.remove('hidden');
+            }
+        }
+
+        function handlePenaltyChosen(choiceNum) {
+            // Save the unchosen penalty
+            const task = gameState.currentTask;
+            const pen1 = task.Tegenprestatie1 || getRandomDefaultPenalty();
+            const pen2 = task.Tegenprestatie2 || getRandomDefaultPenalty();
+            
+            let rejectedPenalty = (choiceNum === 1) ? pen2 : pen1;
+            
+            // User requested that unchosen challenges return at the end of the round for "the lady"
+            if (players[gameState.activePlayerIdx].gender === 'Dame' && gameState.phase === 3) {
+                if (!gameState.deferredTasks) gameState.deferredTasks = [];
+                gameState.deferredTasks.push({
+                    tekst: "Je hebt deze eerder geweigerd, nu moet je hem toch uitvoeren:<br>" + rejectedPenalty,
+                    type: "geen",
+                    info: "Uitgestelde straf",
+                    playerIdx: gameState.activePlayerIdx
+                });
+            }
+
+            elChatArea.innerHTML = `<p class="fade-in">Bevestig dat je uw tegenprestatie hebt uitgevoerd.</p>`;
+            elBtnsPenalty.classList.add('hidden');
+            elBtnsNext.classList.remove('hidden');
+        }
+
+        function finishTurn() {
+            elBtnsTask.classList.add('hidden');
+            elBtnsTask.classList.remove('flex-visible');
+            setTimeout(() => {
+                gameState.turnInPhase++;
+                nextTurn();
+            }, 1800);
+        }
+
+        function nextStep() {
+            elBtnsNext.classList.add('hidden');
+            gameState.turnInPhase++;
+            nextTurn();
+        }
+
+        function initRewardPhase() {
+            resetActionButtons();
+            elChatArea.innerHTML = `
+                <h3 style="font-family:'Great Vibes'; font-size:3rem; margin-bottom:10px;">Voltooid</h3>
+                <p>Jullie reis is ten einde gekomen.</p>
+                <p>Kies jullie beloningen.</p>
+            `;
+            const container = document.getElementById('reward-list-container');
+            container.innerHTML = "";
+            beloningenLijst.forEach((reward, index) => {
+                const div = document.createElement('div');
+                div.className = 'reward-item';
+                div.innerHTML = `<input type="checkbox" id="reward-${index}" value="${reward}" onchange="checkRewards()"><label for="reward-${index}">${reward}</label>`;
+                container.appendChild(div);
+            });
+            elBtnsReward.classList.remove('hidden');
+        }
+
+        function checkRewards() {
+            const checkboxes = document.querySelectorAll('#reward-list-container input[type="checkbox"]');
+            let checked = false;
+            checkboxes.forEach(cb => { if(cb.checked) checked = true; });
+            document.getElementById('btn-confirm-rewards').disabled = !checked;
+        }
+
+        function finishGame() {
+            const checkboxes = document.querySelectorAll('#reward-list-container input[type="checkbox"]');
+            let selected = [];
+            checkboxes.forEach(cb => { if(cb.checked) selected.push(cb.value); });
+
+            resetActionButtons();
+            let listHTML = `<ul style="text-align:left; display:inline-block; font-style:italic; color:#ccc;">`;
+            selected.forEach(s => listHTML += `<li>${s}</li>`);
+            listHTML += `</ul>`;
+
+            elChatArea.innerHTML = `
+                <h3 style="font-family:'Great Vibes'; font-size:3rem;">Geniet</h3>
+                <p>Jullie keuze:</p>
+                ${listHTML}
+                <p style="margin-top:30px; color:var(--primary-red);">♥</p>
+            `;
+        }
+
+        function getRandomDefaultPenalty() {
+            return defaultTegenprestaties[Math.floor(Math.random() * defaultTegenprestaties.length)];
+        }
+
+        function resetActionButtons() {
+            elBtnsTask.classList.add('hidden');
+            elBtnsTask.classList.remove('flex-visible');
+            elBtnsPenalty.classList.add('hidden');
+            elBtnsReward.classList.add('hidden');
+            elBtnsNext.classList.add('hidden');
+        }
+
+        function runSlotMachine(targetValue) {
+            const el = document.getElementById('slot-machine');
+            if (!el) return;
+            let steps = 15;
+            let intervalTime = 80;
+            let currentStep = 0;
+            const interval = setInterval(() => {
+                let tempVal = Math.floor(Math.random() * 50) + 1;
+                el.innerText = tempVal;
+                currentStep++;
+                if (currentStep >= steps) {
+                    clearInterval(interval);
+                    el.innerText = targetValue;
+                    el.style.transform = "scale(1.2)";
+                    setTimeout(() => el.style.transform = "scale(1)", 200);
+                }
+            }, intervalTime);
+        }
+
+        // Modal Functions
+        function openModal(text, link) {
+            document.getElementById('modal-text').innerText = text;
+            const linkEl = document.getElementById('modal-link');
+            if (link && link !== "") {
+                linkEl.href = link;
+                linkEl.classList.remove('hidden');
+            } else {
+                linkEl.classList.add('hidden');
+            }
+            // Zorg dat de modal overal bovenop ligt
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Sluit modal als je buiten klikt
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
